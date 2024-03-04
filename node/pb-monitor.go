@@ -6,12 +6,14 @@ import (
 	"time"
 
 	"github.com/google/gopacket"
+	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
 )
 
 var (
 
 	// Global variables
+	// usage string = "USAGE: pb-monitor.go -i <interface name> -b <buffer entries> -r <Counter MAC Randomisation> -s <SSID filter value>"
 	timeout time.Duration = 30 * time.Second
 
 	// Command line variables
@@ -29,13 +31,20 @@ func main() {
 	flag.BoolVar(&rDetect, "r", false, "Counter MAC Randomisation")
 	flag.StringVar(&filterSSID, "s", "all", "SSID Filter")
 	flag.Parse()
-	flag.PrintDefaults()
 
-	createPacketSource()
+	// Print out command line arguments
+	fmt.Printf(" Interface: %v\n Packet Buffer Size (packets): %v\n Detect and Counter Random MAC: %v\n SSID Filter: %v\n\n", iface, pBuffer, rDetect, filterSSID)
+
+	// Create a PacketSource
+	packetSource := createPacketSource()
+
+	for packet := range packetSource.Packets() {
+		isDot11(packet)
+	}
 }
 
 // Set up connection to local interface
-func createPacketSource() {
+func createPacketSource() *gopacket.PacketSource {
 
 	handle, err := pcap.OpenLive(iface, 65536, true, time.Duration(timeout.Seconds()))
 	if err != nil {
@@ -43,15 +52,19 @@ func createPacketSource() {
 	}
 
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
-	for packet := range packetSource.Packets() {
-		fmt.Printf("Packet: %v", packet) // Do something with a packet here.
-	}
+	return packetSource
 }
 
-// Capture packets
+// Filter to just Ethernet Packets type 04x00 or 08x00
+func isDot11(packet gopacket.Packet) gopacket.Packet {
 
-// Filter out non-beacon or non-broadcast or SSID matches
+	dot11MgmtBeacon := packet.Layer(layers.LayerTypeDot11MgmtBeacon)
 
-// Parse frame
+	if dot11MgmtBeacon != nil {
+		mgmtBeacon, _ := dot11MgmtBeacon.(*layers.Dot11MgmtBeacon)
+		fmt.Println("Beacon: ", mgmtBeacon.LayerContents())
+		fmt.Println()
+	}
 
-// Store up to buffer size?
+	return packet
+}
