@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/google/gopacket"
@@ -32,8 +33,30 @@ func main() {
 	flag.StringVar(&filterSSID, "s", "all", "SSID Filter")
 	flag.Parse()
 
+	// Find all devices
+	devices, err := pcap.FindAllDevs()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Print out command line arguments
-	fmt.Printf(" Interface: %v\n Packet Buffer Size (packets): %v\n Detect and Counter Random MAC: %v\n SSID Filter: %v\n\n", iface, pBuffer, rDetect, filterSSID)
+	fmt.Println("Command Line Arguments:")
+	fmt.Println(" Interface: ", iface)
+	fmt.Println(" Packet Buffer Size (packets): ", pBuffer)
+	fmt.Println(" Detect and Counter Random MAC: ", rDetect)
+	fmt.Println(" SSID Filter: ", filterSSID)
+
+	// Print device information
+	fmt.Println("Devices found:")
+	for _, device := range devices {
+		fmt.Println(" Name: ", device.Name)
+		fmt.Println(" Description: ", device.Description)
+		fmt.Println(" Devices addresses: ", device.Description)
+		for _, address := range device.Addresses {
+			fmt.Println("  IP address: ", address.IP)
+			fmt.Println("  Subnet mask: ", address.Netmask)
+		}
+	}
 
 	// Create a PacketSource
 	packetSource := createPacketSource()
@@ -61,8 +84,10 @@ func isDot11(packet gopacket.Packet) gopacket.Packet {
 	dot11MgmtBeacon := packet.Layer(layers.LayerTypeDot11MgmtBeacon)
 
 	if dot11MgmtBeacon != nil {
-		mgmtBeacon, _ := dot11MgmtBeacon.(*layers.Dot11MgmtBeacon)
-		fmt.Println("Beacon: ", mgmtBeacon.LayerContents())
+		dot11Frame := packet.Layer(layers.LayerTypeDot11)
+		p, _ := dot11Frame.(*layers.Dot11)
+
+		fmt.Println("Beacon: ", p.Address1)
 		fmt.Println()
 	}
 
