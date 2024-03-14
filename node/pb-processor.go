@@ -26,10 +26,11 @@ func createPacketSource(iface string) *gopacket.PacketSource {
 }
 
 // Filter to just Ethernet Packets type 04x00 or 08x00
-func isDot11Beacon(c chan beaconNode, p gopacket.Packet) {
+func isDot11Beacon(p gopacket.Packet) beaconNode {
 
 	dot11MgmtBeacon := p.Layer(layers.LayerTypeDot11MgmtBeacon)
 	metaData := p.Metadata()
+	r := beaconNode{}
 
 	if debugOn {
 		log.Print("DEBUG: Processing Packet with timestamp", metaData.Timestamp.String())
@@ -46,7 +47,8 @@ func isDot11Beacon(c chan beaconNode, p gopacket.Packet) {
 		node, _ := dot11Frame.(*layers.Dot11)
 
 		// Create a struct and push to channel
-		r := beaconNode{timestamp: metaData.Timestamp.String(), BSSID: string(node.Address3), SSID: string(node.Address4)}
-		c <- r
+		r = beaconNode{timestamp: metaData.Timestamp.String(), BSSID: string(node.Address3), SSID: string(node.Address4)}
 	}
+
+	return r
 }

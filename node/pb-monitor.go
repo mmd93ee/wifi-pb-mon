@@ -53,22 +53,13 @@ func main() {
 
 	// Create a PacketSource and Channels for each analysis type
 	packetSource := createPacketSource(iface)
-	dot11BeaconChan := make(chan beaconNode)
 
-	// Capture packets in the packetsource
+	// Capture packets in the packetsource and then
 	for packet := range packetSource.Packets() {
 
-		// Send for analysis against layer types, using channels for returning
-		// a struct for the node type.
-		go isDot11Beacon(dot11BeaconChan, packet)
+		node := isDot11Beacon(packet)
+		log.Print(node)
 
-		// Wait for the channel to respond with a struct for that layer type
-		select {
-		case dot11Node := <-dot11BeaconChan:
-			if debugOn {
-				log.Print("DOT11 Beacon Frame: ", dot11Node.timestamp, dot11Node.BSSID, dot11Node.SSID)
-			}
-		}
 	}
 }
 
