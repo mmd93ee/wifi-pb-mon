@@ -56,10 +56,7 @@ func main() {
 
 	// Capture packets in the packetsource and then
 	for packet := range packetSource.Packets() {
-
-		node := isDot11Beacon(packet)
-		log.Print(node)
-
+		isDot11Beacon(packet)
 	}
 }
 
