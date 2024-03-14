@@ -46,17 +46,23 @@ func main() {
 	// Print out command line arguments
 	fmt.Println("Command Line Arguments:")
 	fmt.Println("  Interface: (-i): ", iface)
-	fmt.Println("  Packet Buffer Size (-b): ", pBuffer)
+	fmt.Println("  Packet Buffer Size (-b) : ", pBuffer)
 	fmt.Println("  Detect and Counter Random MAC (-r): ", rDetect)
 	fmt.Println("  SSID Filter (-s): ", filterSSID)
 	fmt.Println("  Debug (-d): ", debugOn)
 
-	// Create a PacketSource and Channels for each analysis type
+	// Create a PacketSource
 	packetSource := createPacketSource(iface)
 
-	// Capture packets in the packetsource and then
+	// Capture packets in the packetsource
 	for packet := range packetSource.Packets() {
-		isDot11Beacon(packet)
+
+		// Send for analysis against layer type.
+		if isDot11Beacon(packet) {
+			if debugOn {
+				log.Print("DEBUG: Dot11 Management Beacon")
+			}
+		}
 	}
 }
 
@@ -69,7 +75,7 @@ func displayDevices() {
 	}
 
 	// Print device information
-	log.Print("Devices found:")
+	fmt.Println("Devices found:")
 	for _, device := range devices {
 		fmt.Println(" Name: ", device.Name)
 		fmt.Println(" Description: ", device.Description)
