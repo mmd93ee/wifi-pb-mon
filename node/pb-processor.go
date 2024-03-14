@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -27,22 +26,23 @@ func createPacketSource(iface string) *gopacket.PacketSource {
 }
 
 // Filter to just Ethernet Packets type 04x00 or 08x00
-func isDot11(packet gopacket.Packet) bool {
+func isDot11Beacon(c chan beaconNode, p gopacket.Packet) {
 
-	dot11MgmtBeacon := packet.Layer(layers.LayerTypeDot11MgmtBeacon)
-	returnBool := false
+	dot11MgmtBeacon := p.Layer(layers.LayerTypeDot11MgmtBeacon)
 
 	if dot11MgmtBeacon != nil {
 
-		dot11Frame := packet.Layer(layers.LayerTypeDot11)
-		p, _ := dot11Frame.(*layers.Dot11)
+		if debugOn {
+			log.Print("DEBUG: Found Dot11 Management Beacon.")
+		}
 
-		fmt.Println("Beacon: ", p.Address1)
-		fmt.Println()
+		// Create the frame, metadata and mgmt node information
+		dot11Frame := p.Layer(layers.LayerTypeDot11)
+		metaData := p.Metadata()
+		node, _ := dot11Frame.(*layers.Dot11)
 
-		returnBool = true
+		// Create a struct and push to channel
+		r := beaconNode{timestamp: metaData.Timestamp.String(), BSSID: string(node.Address3), SSID: string(node.Address4)}
+		c <- r
 	}
-
-	return returnBool
-
 }

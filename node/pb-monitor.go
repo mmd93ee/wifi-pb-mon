@@ -9,6 +9,12 @@ import (
 	"github.com/google/gopacket/pcap"
 )
 
+type beaconNode struct {
+	timestamp string
+	BSSID     string
+	SSID      string
+}
+
 var (
 
 	// Global variables
@@ -39,20 +45,28 @@ func main() {
 
 	// Print out command line arguments
 	fmt.Println("Command Line Arguments:")
-	fmt.Println(" Interface: ", iface)
-	fmt.Println(" Packet Buffer Size (packets): ", pBuffer)
-	fmt.Println(" Detect and Counter Random MAC: ", rDetect)
-	fmt.Println(" SSID Filter: ", filterSSID)
-	fmt.Println(" Debug: ", debugOn)
+	fmt.Println("  Interface: (-i): ", iface)
+	fmt.Println("  Packet Buffer Size (-b): ", pBuffer)
+	fmt.Println("  Detect and Counter Random MAC (-r): ", rDetect)
+	fmt.Println("  SSID Filter (-s): ", filterSSID)
+	fmt.Println("  Debug (-d): ", debugOn)
 
-	// Create a PacketSource
+	// Create a PacketSource and Channels for each analysis type
 	packetSource := createPacketSource(iface)
+	dot11BeaconChan := make(chan beaconNode)
 
+	// Capture packets in the packetsource
 	for packet := range packetSource.Packets() {
 
-		if isDot11(packet) {
+		// Send for analysis against layer types, using channels for returning
+		// a struct for the node type.
+		go isDot11Beacon(dot11BeaconChan, packet)
+
+		// Wait for the channel to respond with a struct for that layer type
+		select {
+		case dot11Node := <-dot11BeaconChan:
 			if debugOn {
-				log.Println("DEBUG: Found 802.11 Management Beacon Layer")
+				fmt.Println("DOT11 Beacon Frame: ", dot11Node.timestamp, dot11Node.BSSID, dot11Node.SSID)
 			}
 		}
 	}
