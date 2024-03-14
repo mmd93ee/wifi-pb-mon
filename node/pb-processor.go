@@ -32,10 +32,6 @@ func isDot11Beacon(p gopacket.Packet) beaconNode {
 	metaData := p.Metadata()
 	r := beaconNode{}
 
-	if debugOn {
-		log.Print("DEBUG: Processing Packet with timestamp", metaData.Timestamp.String())
-	}
-
 	if dot11MgmtBeacon != nil {
 
 		if debugOn {
