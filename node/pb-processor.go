@@ -29,6 +29,11 @@ func createPacketSource(iface string) *gopacket.PacketSource {
 func isDot11Beacon(c chan beaconNode, p gopacket.Packet) {
 
 	dot11MgmtBeacon := p.Layer(layers.LayerTypeDot11MgmtBeacon)
+	metaData := p.Metadata()
+
+	if debugOn {
+		log.Print("DEBUG: Processing Packet with timestamp", metaData.Timestamp.String())
+	}
 
 	if dot11MgmtBeacon != nil {
 
@@ -38,7 +43,6 @@ func isDot11Beacon(c chan beaconNode, p gopacket.Packet) {
 
 		// Create the frame, metadata and mgmt node information
 		dot11Frame := p.Layer(layers.LayerTypeDot11)
-		metaData := p.Metadata()
 		node, _ := dot11Frame.(*layers.Dot11)
 
 		// Create a struct and push to channel

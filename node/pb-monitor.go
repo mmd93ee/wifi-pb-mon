@@ -66,7 +66,7 @@ func main() {
 		select {
 		case dot11Node := <-dot11BeaconChan:
 			if debugOn {
-				fmt.Println("DOT11 Beacon Frame: ", dot11Node.timestamp, dot11Node.BSSID, dot11Node.SSID)
+				log.Print("DOT11 Beacon Frame: ", dot11Node.timestamp, dot11Node.BSSID, dot11Node.SSID)
 			}
 		}
 	}
@@ -81,7 +81,7 @@ func displayDevices() {
 	}
 
 	// Print device information
-	fmt.Println("Devices found:")
+	log.Print("Devices found:")
 	for _, device := range devices {
 		fmt.Println(" Name: ", device.Name)
 		fmt.Println(" Description: ", device.Description)
