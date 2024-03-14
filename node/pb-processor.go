@@ -25,10 +25,6 @@ func createPacketSource(iface string) *gopacket.PacketSource {
 	return packetSource
 }
 
-func capturePackets() chan gopacket.Packet {
-	return
-}
-
 // Filter to just Ethernet Packets type 04x00 or 08x00
 func Dot11Beacon(p gopacket.Packet) beaconNode {
 
