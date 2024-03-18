@@ -70,11 +70,13 @@ func main() {
 		select {
 		case data := <-chanBeacon:
 			if data.BSSID != "" {
-				fmt.Printf("Time: %s\n BSSID: %s\n SSID: %s\n Flags: %s\n\n",
+				fmt.Printf("Time: %s\n BSSID: %s\n SSID: %s\n Flags: %s\n Proto: %v\n Type: %s\n\n",
 					data.timestamp,
 					data.BSSID,
 					data.SSID,
-					data.PFLAG)
+					data.PFLAG,
+					data.PROTO,
+					data.TYPE)
 			}
 		case data := <-chanProbe:
 			fmt.Printf("Fail: %T", data)
