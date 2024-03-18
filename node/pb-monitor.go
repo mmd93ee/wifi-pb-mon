@@ -80,6 +80,8 @@ func main() {
 			}
 		case data := <-chanProbe:
 			fmt.Printf("Fail: %T", data)
+		default:
+			fmt.Print("BREAK OUT!\n")
 		}
 	}
 }
