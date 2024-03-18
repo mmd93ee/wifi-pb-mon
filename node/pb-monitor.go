@@ -15,6 +15,8 @@ type BeaconNode struct {
 	BSSID     string
 	SSID      string
 	PFLAG     string
+	PROTO     uint8
+	TYPE      string
 }
 
 var (
