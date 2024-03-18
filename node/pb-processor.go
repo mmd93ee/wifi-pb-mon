@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -42,6 +43,7 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode) {
 
 	if dot11Info != nil {
 		dot11Info, _ := dot11Info.(*layers.Dot11InformationElement)
+		fmt.Printf("D11 Info: %s", dot11Info)
 		if dot11Info.ID.String() == layers.Dot11InformationElementIDSSID.String() {
 			beaconNode.SSID = dot11Info.ID.String()
 		}
