@@ -26,7 +26,7 @@ func createPacketSource(iface string) *gopacket.PacketSource {
 }
 
 // Test to see if this is a Beacon frame then return the InformationElement
-func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode) {
+func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string) {
 
 	source := *p
 	beaconNode := BeaconNode{source.Metadata().Timestamp.String(), "", "", "", 0000, ""}
@@ -36,21 +36,24 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode) {
 
 	if dot11 != nil {
 		dot11, _ := dot11.(*layers.Dot11)
-		beaconNode.BSSID = dot11.Address3.String()
-		beaconNode.PFLAG = dot11.Flags.String()
-		beaconNode.TYPE = dot11.Type.String()
-		beaconNode.PROTO = dot11.Proto
+		beaconNode.bssid = dot11.Address3.String()
+		beaconNode.pflag = dot11.Flags.String()
+		beaconNode.ptype = dot11.Type.String()
+		beaconNode.proto = dot11.Proto
 	}
 
 	if dot11Info != nil {
 		dot11InfoEl, _ := dot11Info.(*layers.Dot11InformationElement)
 		if dot11InfoEl.ID.String() == layers.Dot11InformationElementIDSSID.String() {
-			beaconNode.SSID = string(dot11InfoEl.Info)
+			beaconNode.ssid = string(dot11InfoEl.Info)
 		}
 	}
 
-	c <- &beaconNode
-
+	if filt == "all" {
+		c <- &beaconNode
+	} else if filt == beaconNode.bssid {
+		c <- &beaconNode
+	}
 }
 
 // Test to see if this is a Probe frame then return the InformationElement

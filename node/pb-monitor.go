@@ -12,11 +12,11 @@ import (
 
 type BeaconNode struct {
 	timestamp string
-	BSSID     string
-	SSID      string
-	PFLAG     string
-	PROTO     uint8
-	TYPE      string
+	bssid     string
+	ssid      string
+	pflag     string
+	proto     uint8
+	ptype     string
 }
 
 var (
@@ -26,11 +26,11 @@ var (
 	timeout time.Duration = 30 * time.Second
 
 	// Command line variables
-	iface      string
-	pBuffer    int
-	rDetect    bool
-	filterSSID string
-	debugOn    bool
+	iface       string
+	pBuffer     int
+	rDetect     bool
+	filterBSSID string
+	debugOn     bool
 )
 
 func main() {
@@ -39,7 +39,7 @@ func main() {
 	flag.StringVar(&iface, "i", "lo1", "Interface name to use")
 	flag.IntVar(&pBuffer, "b", 1000, "Maximum queue size for packet decode")
 	flag.BoolVar(&rDetect, "r", false, "Counter MAC Randomisation On")
-	flag.StringVar(&filterSSID, "s", "all", "SSID Filter")
+	flag.StringVar(&filterBSSID, "s", "all", "SSID Filter")
 	flag.BoolVar(&debugOn, "d", false, "Debug On")
 	flag.Parse()
 
@@ -52,7 +52,7 @@ func main() {
 	fmt.Println("  Interface: (-i): ", iface)
 	fmt.Println("  Packet Buffer Size (-b) : ", pBuffer)
 	fmt.Println("  Detect and Counter Random MAC (-r): ", rDetect)
-	fmt.Println("  SSID Filter (-s): ", filterSSID)
+	fmt.Println("  BSSID Filter (-s): ", filterBSSID)
 	fmt.Println("  Debug (-d): ", debugOn)
 
 	// Create a PacketSource and Channels
@@ -64,19 +64,19 @@ func main() {
 	for packet := range packetSource.Packets() {
 
 		// Send for analysis against layer type.
-		go Dot11BeaconInfoElement(&packet, chanBeacon)
+		go Dot11BeaconInfoElement(&packet, chanBeacon, filterBSSID)
 		go Dot11ProbeInfoElement(&packet)
 
 		select {
 		case data := <-chanBeacon:
-			if data.BSSID != "" {
+			if data.bssid != "" {
 				fmt.Printf("Time: %s\n BSSID: %s\n SSID: %s\n Flags: %s\n Proto: %v\n Type: %s\n\n",
 					data.timestamp,
-					data.BSSID,
-					data.SSID,
-					data.PFLAG,
-					data.PROTO,
-					data.TYPE)
+					data.bssid,
+					data.ssid,
+					data.pflag,
+					data.proto,
+					data.ptype)
 			}
 		case data := <-chanProbe:
 			fmt.Printf("Fail: %T", data)
