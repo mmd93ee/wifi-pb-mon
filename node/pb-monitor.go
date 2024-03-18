@@ -6,13 +6,15 @@ import (
 	"log"
 	"time"
 
+	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
 )
 
-type beaconNode struct {
+type BeaconNode struct {
 	timestamp string
 	BSSID     string
 	SSID      string
+	PFLAG     string
 }
 
 var (
@@ -51,17 +53,27 @@ func main() {
 	fmt.Println("  SSID Filter (-s): ", filterSSID)
 	fmt.Println("  Debug (-d): ", debugOn)
 
-	// Create a PacketSource
+	// Create a PacketSource and Channels
 	packetSource := createPacketSource(iface)
+	chanBeacon := make(chan *BeaconNode)
+	chanProbe := make(chan *layers.Dot11InformationElement)
 
 	// Capture packets in the packetsource
 	for packet := range packetSource.Packets() {
 
 		// Send for analysis against layer type.
-		if isDot11Beacon(packet) {
-			if debugOn {
-				log.Print("DEBUG: Dot11 Management Beacon")
-			}
+		go Dot11BeaconInfoElement(&packet, chanBeacon)
+		go Dot11ProbeInfoElement(&packet)
+
+		select {
+		case data := <-chanBeacon:
+			fmt.Printf("Time: %s\n BSSID: %s\n SSID: %s\n Flags: %s",
+				data.timestamp,
+				data.BSSID,
+				data.SSID,
+				data.PFLAG)
+		case data := <-chanProbe:
+			fmt.Printf("Fail: %T", data)
 		}
 	}
 }

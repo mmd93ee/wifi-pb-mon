@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -25,41 +26,38 @@ func createPacketSource(iface string) *gopacket.PacketSource {
 	return packetSource
 }
 
-// Filter to just Ethernet Packets type 04x00 or 08x00
-func Dot11Beacon(p gopacket.Packet) beaconNode {
+// Test to see if this is a Beacon frame then return the InformationElement
+func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode) {
 
-	dot11MgmtBeacon := p.Layer(layers.LayerTypeDot11MgmtBeacon)
-	metaData := p.Metadata()
-	r := beaconNode{}
+	source := *p
+	beaconNode := BeaconNode{source.Metadata().Timestamp.String(), "", "", ""}
 
-	if dot11MgmtBeacon != nil {
+	dot11 := source.Layer(layers.LayerTypeDot11)
+	dot11Info := source.Layer(layers.LayerTypeDot11MgmtBeacon)
 
-		if debugOn {
-			log.Print("DEBUG: Found Dot11 Management Beacon.")
-		}
-
-		// Create the frame, metadata and mgmt node information
-		dot11Frame := p.Layer(layers.LayerTypeDot11)
-		node, _ := dot11Frame.(*layers.Dot11)
-
-		r = beaconNode{timestamp: metaData.Timestamp.String(), BSSID: string(node.Address3), SSID: string(node.Address4)}
+	if nil != dot11 {
+		dot11, _ := dot11.(*layers.Dot11)
+		beaconNode.BSSID = dot11.Address3.String()
+		beaconNode.PFLAG = dot11.Flags.String()
 	}
 
-	return r
+	if nil != dot11Info {
+		dot11Info, _ := dot11Info.(*layers.Dot11InformationElement)
+		if dot11Info.ID == layers.Dot11InformationElementIDSSID {
+			beaconNode.SSID = dot11Info.ID.String()
+		}
+	}
+
+	fmt.Println("Dot11 Frame: ", beaconNode)
+
+	c <- &beaconNode
+
 }
 
-func isDot11Beacon(p gopacket.Packet) bool {
+// Test to see if this is a Probe frame then return the InformationElement
+func Dot11ProbeInfoElement(p *gopacket.Packet) {
 
-	dot11MgmtBeacon := p.Layer(layers.LayerTypeDot11MgmtBeacon)
-	isDot11 := false
+	// Allow other goroutines to finish first
+	time.Sleep(2 * time.Second)
 
-	if dot11MgmtBeacon != nil {
-
-		if debugOn {
-			log.Print("DEBUG: Found Dot11 Management Beacon.")
-		}
-
-		isDot11 = true
-	}
-	return isDot11
 }
