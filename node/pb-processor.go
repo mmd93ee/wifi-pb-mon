@@ -49,12 +49,14 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string)
 		}
 	}
 
+	// If we have set the filter to only focus on one BSSID then reset all others to blank
 	if filt == "all" {
 		c <- &beaconNode
-	} else if filt == beaconNode.bssid {
+	} else if filt != beaconNode.bssid {
+		beaconNode.bssid = ""
 		c <- &beaconNode
 	} else {
-		c <- nil
+		c <- &beaconNode
 	}
 }
 
