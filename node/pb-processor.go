@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -47,8 +46,6 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode) {
 			beaconNode.SSID = dot11Info.ID.String()
 		}
 	}
-
-	fmt.Println("Dot11 Frame: ", beaconNode)
 
 	c <- &beaconNode
 
