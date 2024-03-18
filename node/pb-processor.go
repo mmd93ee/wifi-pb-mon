@@ -41,9 +41,11 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode) {
 	}
 
 	if nil != dot11Info {
-		dot11Info, _ := dot11Info.(*layers.Dot11InformationElement)
-		if dot11Info.ID == layers.Dot11InformationElementIDSSID {
-			beaconNode.SSID = dot11Info.ID.String()
+		dot11Info, err := dot11Info.(*layers.Dot11InformationElement)
+		if !err {
+			if dot11Info.ID == layers.Dot11InformationElementIDSSID {
+				beaconNode.SSID = dot11Info.ID.String()
+			}
 		}
 	}
 

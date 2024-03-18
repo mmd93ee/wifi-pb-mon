@@ -68,7 +68,7 @@ func main() {
 		select {
 		case data := <-chanBeacon:
 			if data.BSSID != "" {
-				fmt.Printf("Time: %s\n BSSID: %s\n SSID: %s\n Flags: %s",
+				fmt.Printf("Time: %s\n BSSID: %s\n SSID: %s\n Flags: %s\n\n",
 					data.timestamp,
 					data.BSSID,
 					data.SSID,
