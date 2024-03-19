@@ -11,12 +11,14 @@ import (
 )
 
 type BeaconNode struct {
-	timestamp string
-	bssid     string
-	ssid      string
-	pflag     string
-	proto     uint8
-	ptype     string
+	timestamp   string
+	bssid       string
+	ssid        string
+	pflag       string
+	transmitter string
+	receiver    string
+	proto       uint8
+	ptype       string
 }
 
 var (
@@ -70,10 +72,12 @@ func main() {
 		select {
 		case data := <-chanBeacon:
 			if data.bssid != "" {
-				fmt.Printf("Time: %s\n BSSID: %s\n SSID: %s\n Flags: %s\n Proto: %v\n Type: %s\n\n",
+				fmt.Printf("Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n\n",
 					data.timestamp,
 					data.bssid,
 					data.ssid,
+					data.transmitter,
+					data.receiver,
 					data.pflag,
 					data.proto,
 					data.ptype)

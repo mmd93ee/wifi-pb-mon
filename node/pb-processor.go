@@ -29,7 +29,7 @@ func createPacketSource(iface string) *gopacket.PacketSource {
 func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string) {
 
 	source := *p
-	beaconNode := BeaconNode{source.Metadata().Timestamp.String(), "", "", "", 0000, ""}
+	beaconNode := BeaconNode{source.Metadata().Timestamp.String(), "", "", "", "", "", 0000, ""}
 
 	dot11 := source.Layer(layers.LayerTypeDot11)
 	dot11Info := source.Layer(layers.LayerTypeDot11InformationElement)
