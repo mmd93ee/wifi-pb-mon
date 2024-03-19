@@ -41,7 +41,7 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string)
 		beaconNode.pflag = dot11.Flags.String()
 		beaconNode.ptype = dot11.Type.String()
 		beaconNode.proto = dot11.Proto
-		fmt.Printf("\n*** DEBUG: %s... %s... %s... %s\n", dot11.Address1.String(), dot11.Address2.String(), dot11.Address3.String(), dot11.Address4.String())
+		fmt.Printf("\n*** DEBUG: %s... %s... %s... %s...\n", dot11.Address1.String(), dot11.Address2.String(), dot11.Address3.String(), dot11.Address4.String())
 	}
 
 	if dot11Info != nil {
