@@ -48,7 +48,7 @@ func main() {
 	}
 
 	// Print out command line arguments
-	fmt.Println("Command Line Arguments:")
+	fmt.Println("\n\nCommand Line Arguments:")
 	fmt.Println("  Interface: (-i): ", iface)
 	fmt.Println("  Packet Buffer Size (-b) : ", pBuffer)
 	fmt.Println("  Detect and Counter Random MAC (-r): ", rDetect)
@@ -93,7 +93,7 @@ func displayDevices() {
 	}
 
 	// Print device information
-	fmt.Println("Devices found:")
+	fmt.Println("\n\n- Devices found:")
 	for _, device := range devices {
 		fmt.Println(" Name: ", device.Name)
 		fmt.Println(" Description: ", device.Description)

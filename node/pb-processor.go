@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -40,6 +41,7 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string)
 		beaconNode.pflag = dot11.Flags.String()
 		beaconNode.ptype = dot11.Type.String()
 		beaconNode.proto = dot11.Proto
+		fmt.Println(dot11)
 	}
 
 	if dot11Info != nil {
