@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -39,8 +38,6 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 	dot11 := source.Layer(layers.LayerTypeDot11)
 	dot11Info := source.Layer(layers.LayerTypeDot11InformationElement)
 
-	fmt.Printf("Packet: %v \n", dot11)
-
 	if nil != dot11 {
 
 		// Address1: Reciever address.  Address2: Transmitter/Source address.  Address3: BSSID/Destination
@@ -68,6 +65,6 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 	} else if beaconNode.ptype == ProbeString {
 		cprobe <- &beaconNode
 	} else {
-		cNone <- &beaconNode
+		cnone <- &beaconNode
 	}
 }
