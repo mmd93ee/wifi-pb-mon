@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -63,6 +64,8 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 	if beaconNode.ptype == BeaconString {
 		cbeacon <- &beaconNode
 	} else if beaconNode.ptype == ProbeString {
+
+		fmt.Printf("DEBUG: %v", source)
 		cprobe <- &beaconNode
 	} else {
 		cnone <- &beaconNode

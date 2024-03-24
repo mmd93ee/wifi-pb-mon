@@ -87,7 +87,7 @@ func main() {
 
 		case data := <-chanProbe:
 
-			if debugOn {
+			if debugOn && data.bssid == "ignore" {
 				fmt.Printf("DEBUG: PROBE PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n\n",
 					data.timestamp,
 					data.bssid,
