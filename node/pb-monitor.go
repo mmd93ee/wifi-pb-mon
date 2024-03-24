@@ -58,6 +58,11 @@ func main() {
 		displayDevices()
 	}
 
+	// If BSSID filter is set to blank then set it to 'all'
+	if !filterBSSID {
+		filterBSSID = "all"
+	}
+
 	// Create a PacketSource and Channels
 	packetSource := createPacketSource(iface)
 
