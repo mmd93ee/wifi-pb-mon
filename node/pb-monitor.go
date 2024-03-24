@@ -45,10 +45,6 @@ func main() {
 	flag.BoolVar(&debugOn, "d", false, "Debug On")
 	flag.Parse()
 
-	if debugOn {
-		displayDevices()
-	}
-
 	// Print out command line arguments
 	fmt.Println("\n\nCommand Line Arguments:")
 	fmt.Println("  Interface: (-i): ", iface)
@@ -57,8 +53,16 @@ func main() {
 	fmt.Println("  BSSID Filter (-s): ", filterBSSID)
 	fmt.Println("  Debug (-d): ", debugOn)
 
+	// Display the devices on the local machine
+	if debugOn {
+		displayDevices()
+	}
+
 	// Create a PacketSource and Channels
-	packetSource := createPacketSource(iface)
+	packetSource, err := createPacketSource(iface)
+	if err != nil {
+		displayDevices()
+	}
 	chanBeacon := make(chan *BeaconNode)
 	chanProbe := make(chan *layers.Dot11InformationElement)
 
