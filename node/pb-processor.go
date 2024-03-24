@@ -27,15 +27,15 @@ func createPacketSource(iface string) *gopacket.PacketSource {
 }
 
 // Test to see if this is a Beacon frame then return the InformationElement
-func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string, debugOn bool) {
+func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, debugOn bool) {
 
 	source := *p
 	beaconNode := BeaconNode{source.Metadata().Timestamp.String(), "", "", "", "", "", 0000, ""}
-
+	fmt.FPrintln("Packet: %v", source)
 	dot11 := source.Layer(layers.LayerTypeDot11)
 	dot11Info := source.Layer(layers.LayerTypeDot11InformationElement)
 
-	if nil != dot11 {
+	if nil != dot11layer {
 
 		// Address1: Reciever address.  Address2: Transmitter/Source address.  Address3: BSSID/Destination
 		dot11, _ := dot11.(*layers.Dot11)

@@ -68,7 +68,7 @@ func main() {
 	for packet := range packetSource.Packets() {
 
 		// Send for analysis against layer type.
-		go Dot11BeaconInfoElement(&packet, chanBeacon, filterBSSID, debugOn)
+		go Dot11BeaconInfoElement(&packet, chanBeacon, debugOn)
 		go Dot11ProbeInfoElement(&packet)
 
 		select {
