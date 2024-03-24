@@ -77,7 +77,7 @@ func main() {
 				fmt.Printf("DEBUG: AP BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n\n",
 					data.timestamp,
 					data.bssid,
-					data.ssid+string(len(data.ssid)),
+					data.ssid,
 					data.transmitter,
 					data.receiver,
 					data.pflag,
