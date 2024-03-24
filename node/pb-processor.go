@@ -37,9 +37,6 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string,
 
 	if dot11 != nil {
 
-		if debuOn {
-			fmt.Printf("DEBUG: Found LayerTypeDot11 from %v", dot11.Address3.String())
-		}
 		// Address1: Reciever address.  Address2: Transmitter/Source address.  Address3: BSSID/Destination
 		dot11, _ := dot11.(*layers.Dot11)
 		beaconNode.bssid = dot11.Address3.String()
@@ -48,12 +45,20 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string,
 		beaconNode.pflag = dot11.Flags.String()
 		beaconNode.ptype = dot11.Type.String()
 		beaconNode.proto = dot11.Proto
+
+		if debugOn {
+			fmt.Printf("DEBUG: Found LayerTypeDot11 from %v", dot11.Address3.String())
+		}
 	}
 
 	if dot11Info != nil {
 		dot11InfoEl, _ := dot11Info.(*layers.Dot11InformationElement)
 		if dot11InfoEl.ID.String() == layers.Dot11InformationElementIDSSID.String() {
 			beaconNode.ssid = string(dot11InfoEl.Info)
+
+			if debugOn {
+				fmt.Printf("DEBUG: Found Dot11InformationElement with SSID %v", string(dott11InfoEl.Info))
+			}
 		}
 	}
 
