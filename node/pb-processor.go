@@ -66,14 +66,14 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string,
 	if filt == "all" {
 
 		if debugOn {
-			fmt.Printf("Found packet and no filter applied to capture, putting to channel")
+			fmt.Printf("Found packet and no filter applied to capture, putting to channel\n")
 		}
 
 		c <- &beaconNode
 	} else if filt != beaconNode.bssid {
 
 		if debugOn {
-			fmt.Printf("Found packet not matching filter: %v, putting to channel", filterBSSID)
+			fmt.Printf("Found packet not matching filter: %v, putting to channel\n", filterBSSID)
 		}
 
 		beaconNode.bssid = ""
@@ -81,7 +81,7 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string,
 	} else {
 
 		if debugOn {
-			fmt.Printf("Found packet matching filter %v, putting to channel", filterBSSID)
+			fmt.Printf("Found packet matching filter %v, putting to channel\n", filterBSSID)
 		}
 
 		c <- &beaconNode
