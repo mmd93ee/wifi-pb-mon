@@ -58,11 +58,6 @@ func main() {
 		displayDevices()
 	}
 
-	// If BSSID filter is set to blank then set it to 'all'
-	if filterBSSID == "" {
-		filterBSSID = "all"
-	}
-
 	// Create a PacketSource and Channels
 	packetSource := createPacketSource(iface)
 
@@ -73,7 +68,7 @@ func main() {
 	for packet := range packetSource.Packets() {
 
 		// Send for analysis against layer type.
-		go Dot11BeaconInfoElement(&packet, chanBeacon, filterBSSID)
+		go Dot11BeaconInfoElement(&packet, chanBeacon, filterBSSID, debugOn)
 		go Dot11ProbeInfoElement(&packet)
 
 		select {
