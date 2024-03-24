@@ -62,24 +62,7 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string,
 		}
 	}
 
-	// If we have set the filter to only focus on one BSSID then reset all others to blank
-	if filt == "all" {
-
-		c <- &beaconNode
-
-	} else if filt != beaconNode.bssid {
-
-		beaconNode.bssid = ""
-		c <- &beaconNode
-
-	} else {
-
-		if debugOn {
-			fmt.Printf("Found packet matching filter %v, putting to channel\n", filterBSSID)
-		}
-
-		c <- &beaconNode
-	}
+	c <- &beaconNode
 }
 
 // Test to see if this is a Probe frame then return the InformationElement
