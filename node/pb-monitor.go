@@ -73,7 +73,7 @@ func main() {
 		select {
 		case data := <-chanBeacon:
 
-			if debugOn && data.bssid != "" {
+			if debugOn && data.ssid != "" {
 				fmt.Printf("DEBUG: AP BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n\n",
 					data.timestamp,
 					data.bssid,
@@ -106,6 +106,7 @@ func main() {
 		case <-time.After(timeout):
 			err := "TIMEOUT ERROR ON CHANNEL: " + string(timeout) + " Seconds with no data recieved"
 			panic(err)
+
 		}
 	}
 }
