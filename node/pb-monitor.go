@@ -73,6 +73,8 @@ func main() {
 
 		select {
 		case data := <-chanBeacon:
+
+			fmt.Printf("Packet on channel with BSSID: %v", data.bssid)
 			if data.bssid != "" {
 				fmt.Printf("Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n\n",
 					data.timestamp,

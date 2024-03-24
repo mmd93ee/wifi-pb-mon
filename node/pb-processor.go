@@ -66,10 +66,12 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string,
 	if filt == "all" {
 
 		c <- &beaconNode
+
 	} else if filt != beaconNode.bssid {
 
 		beaconNode.bssid = ""
 		c <- &beaconNode
+
 	} else {
 
 		if debugOn {
