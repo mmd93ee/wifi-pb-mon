@@ -73,11 +73,11 @@ func main() {
 		select {
 		case data := <-chanBeacon:
 
-			if debugOn && data.ssid != "" {
+			if debugOn && len(data.ssid) > 0 {
 				fmt.Printf("DEBUG: AP BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n\n",
 					data.timestamp,
 					data.bssid,
-					data.ssid,
+					data.ssid+string(len(data.ssid)),
 					data.transmitter,
 					data.receiver,
 					data.pflag,
