@@ -68,7 +68,7 @@ func main() {
 	for packet := range packetSource.Packets() {
 
 		// Send for analysis against layer type.
-		go Dot11GetElement(&packet, chanBeacon, chanProbe, chanNull, debugOn)
+		go Dot11GetElement(&packet, chanBeacon, chanProbe, chanNone, debugOn)
 
 		select {
 		case data := <-chanBeacon:
