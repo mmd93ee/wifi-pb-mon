@@ -59,7 +59,7 @@ func main() {
 	}
 
 	// Create a PacketSource and Channels
-	packetSource, err := createPacketSource(iface)
+	packetSource := createPacketSource(iface)
 
 	chanBeacon := make(chan *BeaconNode)
 	chanProbe := make(chan *layers.Dot11InformationElement)
@@ -99,14 +99,14 @@ func displayDevices() {
 	}
 
 	// Print device information
-	fmt.Println("\n\n- Devices found:")
+	fmt.Println("\n\nDevices found:")
 	for _, device := range devices {
-		fmt.Println(" Name: ", device.Name)
-		fmt.Println(" Description: ", device.Description)
-		fmt.Println(" Devices addresses: ", device.Description)
+		fmt.Println("  Name: ", device.Name)
+		fmt.Println("  Description: ", device.Description)
+		fmt.Println("  Devices addresses: ", device.Description)
 		for _, address := range device.Addresses {
-			fmt.Println("  IP address: ", address.IP)
-			fmt.Println("  Subnet mask: ", address.Netmask)
+			fmt.Println("    IP address: ", address.IP)
+			fmt.Println("    Subnet mask: ", address.Netmask)
 		}
 	}
 }
