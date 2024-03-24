@@ -11,7 +11,7 @@ import (
 
 var (
 	BeaconString = "MgmtBeacon"
-	ProbeString  = "MgmtProbe"
+	ProbeString  = "MgmtProbeReq"
 )
 
 // Set up connection to local interface
