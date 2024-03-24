@@ -74,7 +74,7 @@ func main() {
 		case data := <-chanBeacon:
 
 			if debugOn && data.bssid != "" {
-				fmt.Printf("DEBUG: BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n\n",
+				fmt.Printf("DEBUG: AP BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n\n",
 					data.timestamp,
 					data.bssid,
 					data.ssid,
@@ -99,8 +99,12 @@ func main() {
 					data.ptype)
 			}
 
-		case data := <-chanNone:
+		// Do nothing channel - this is where anything that is not a Beacon or Probe ends up
+		case <-chanNone:
 
+		// Set a timeout on the channel to make sure we close the channel eventually if blocked.
+		case <-time.After(timeout):
+			panic("TIMEOUT ERROR ON CHANNEL: %v Seconds with no data recieved", timeout)
 		}
 	}
 }
