@@ -104,7 +104,7 @@ func main() {
 
 		// Set a timeout on the channel to make sure we close the channel eventually if blocked.
 		case <-time.After(timeout):
-			panic("TIMEOUT ERROR ON CHANNEL: %v Seconds with no data recieved", timeout)
+			panic("TIMEOUT ERROR ON CHANNEL: ", timeout, " Seconds with no data recieved")
 		}
 	}
 }
