@@ -60,9 +60,7 @@ func main() {
 
 	// Create a PacketSource and Channels
 	packetSource, err := createPacketSource(iface)
-	if err != nil {
-		displayDevices()
-	}
+
 	chanBeacon := make(chan *BeaconNode)
 	chanProbe := make(chan *layers.Dot11InformationElement)
 
