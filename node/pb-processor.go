@@ -57,7 +57,7 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string,
 			beaconNode.ssid = string(dot11InfoEl.Info)
 
 			if debugOn {
-				fmt.Printf("DEBUG: Found Dot11InformationElement with SSID %v", string(dott11InfoEl.Info))
+				fmt.Printf("DEBUG: Found Dot11InformationElement with SSID %v", string(dot11InfoEl.Info))
 			}
 		}
 	}
