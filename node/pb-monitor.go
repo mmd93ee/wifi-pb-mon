@@ -6,7 +6,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
 )
 
@@ -62,14 +61,14 @@ func main() {
 	packetSource := createPacketSource(iface)
 
 	chanBeacon := make(chan *BeaconNode)
-	chanProbe := make(chan *layers.Dot11InformationElement)
+	chanProbe := make(chan *BeaconNode)
+	chanNone := make(chan *BeaconNode)
 
 	// Capture packets in the packetsource
 	for packet := range packetSource.Packets() {
 
 		// Send for analysis against layer type.
-		go Dot11BeaconInfoElement(&packet, chanBeacon, debugOn)
-		go Dot11ProbeInfoElement(&packet)
+		go Dot11GetElement(&packet, chanBeacon, chanProbe, chanNull, debugOn)
 
 		select {
 		case data := <-chanBeacon:
@@ -85,7 +84,10 @@ func main() {
 				data.ptype)
 
 		case data := <-chanProbe:
-			fmt.Printf("Fail: %T", data)
+			fmt.Printf("Probe: %T", data)
+
+		case data := <-chanNone:
+			fmt.Printf("Not interesting: %T", data)
 		}
 	}
 }

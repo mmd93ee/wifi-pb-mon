@@ -10,6 +10,11 @@ import (
 	"github.com/google/gopacket/pcap"
 )
 
+var (
+	BeaconString = "MgmtBeacon"
+	ProbeString  = "MgmtProbe"
+)
+
 // Set up connection to local interface
 func createPacketSource(iface string) *gopacket.PacketSource {
 
@@ -27,7 +32,7 @@ func createPacketSource(iface string) *gopacket.PacketSource {
 }
 
 // Test to see if this is a Beacon frame then return the InformationElement
-func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, debugOn bool) {
+func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *BeaconNode, cnone chan *BeaconNode, debugOn bool) {
 
 	source := *p
 	beaconNode := BeaconNode{source.Metadata().Timestamp.String(), "", "", "", "", "", 0000, ""}
@@ -47,9 +52,6 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, debugOn bool
 		beaconNode.ptype = dot11.Type.String()
 		beaconNode.proto = dot11.Proto
 
-		if debugOn {
-			fmt.Printf("DEBUG: Found LayerTypeDot11 from %v", dot11.Address3.String())
-		}
 	}
 
 	if nil != dot11Info {
@@ -57,16 +59,15 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, debugOn bool
 		if dot11InfoEl.ID.String() == layers.Dot11InformationElementIDSSID.String() {
 			beaconNode.ssid = string(dot11InfoEl.Info)
 
-			if debugOn {
-				fmt.Printf("DEBUG: Found Dot11InformationElement with SSID %v", string(dot11InfoEl.Info))
-			}
 		}
 	}
 
-	c <- &beaconNode
-}
-
-// Test to see if this is a Probe frame then return the InformationElement
-func Dot11ProbeInfoElement(p *gopacket.Packet) {
-
+	// Work out which channel to return down
+	if beaconNode.ptype == BeaconString {
+		cbeacon <- &beaconNode
+	} else if beaconNode.ptype == ProbeString {
+		cprobe <- &beaconNode
+	} else {
+		cNone <- &beaconNode
+	}
 }
