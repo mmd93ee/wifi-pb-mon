@@ -35,7 +35,7 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string,
 	dot11 := source.Layer(layers.LayerTypeDot11)
 	dot11Info := source.Layer(layers.LayerTypeDot11InformationElement)
 
-	if dot11 != nil {
+	if nil != dot11 {
 
 		// Address1: Reciever address.  Address2: Transmitter/Source address.  Address3: BSSID/Destination
 		dot11, _ := dot11.(*layers.Dot11)
@@ -51,7 +51,7 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, filt string,
 		}
 	}
 
-	if dot11Info != nil {
+	if nil != dot11Info {
 		dot11InfoEl, _ := dot11Info.(*layers.Dot11InformationElement)
 		if dot11InfoEl.ID.String() == layers.Dot11InformationElementIDSSID.String() {
 			beaconNode.ssid = string(dot11InfoEl.Info)
