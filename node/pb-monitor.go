@@ -59,7 +59,7 @@ func main() {
 	}
 
 	// If BSSID filter is set to blank then set it to 'all'
-	if !filterBSSID {
+	if filterBSSID == "" {
 		filterBSSID = "all"
 	}
 
