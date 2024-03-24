@@ -31,11 +31,11 @@ func Dot11BeaconInfoElement(p *gopacket.Packet, c chan *BeaconNode, debugOn bool
 
 	source := *p
 	beaconNode := BeaconNode{source.Metadata().Timestamp.String(), "", "", "", "", "", 0000, ""}
-	fmt.FPrintln("Packet: %v", source)
+	fmt.Printf("Packet: %v \n", source)
 	dot11 := source.Layer(layers.LayerTypeDot11)
 	dot11Info := source.Layer(layers.LayerTypeDot11InformationElement)
 
-	if nil != dot11layer {
+	if nil != dot11 {
 
 		// Address1: Reciever address.  Address2: Transmitter/Source address.  Address3: BSSID/Destination
 		dot11, _ := dot11.(*layers.Dot11)
