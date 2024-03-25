@@ -38,6 +38,7 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 	beaconNode := BeaconNode{source.Metadata().Timestamp.String(), "", "", "", "", "", 0000, ""}
 	dot11 := source.Layer(layers.LayerTypeDot11)
 	dot11Info := source.Layer(layers.LayerTypeDot11InformationElement)
+	dot11Probe := source.Layer(layers.LayerTypeDot11MgmtProbeReq)
 
 	if nil != dot11 {
 
@@ -60,6 +61,11 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 		}
 	}
 
+	if nil != dot11Probe {
+		dot11Pr, _ := dot11Probe.(*layers.Dot11MgmtProbeReq)
+		beaconNode.ssid, _ = decodeProbeRequestLayer(dot11Pr)
+	}
+
 	// Work out which channel to return down
 	if beaconNode.ptype == BeaconString {
 		cbeacon <- &beaconNode
@@ -70,4 +76,35 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 	} else {
 		cnone <- &beaconNode
 	}
+}
+
+func decodeProbeRequestLayer(probeLayer *layers.Dot11MgmtProbeReq) (ssid string, vendor []byte) {
+
+	var body []byte
+	body = probeLayer.LayerContents()
+	ssid = "ssid to be determined"
+
+	for i := uint64(0); i < uint64(len(body)); {
+		id := layers.Dot11InformationElementID(body[i])
+		i++
+		switch id {
+		case layers.Dot11InformationElementIDSSID:
+			elemLen := uint64(body[i])
+			i++
+			if elemLen > 0 {
+				ssid = string(body[i : i+elemLen])
+				i += elemLen
+			}
+			break
+		case layers.Dot11InformationElementIDVendor:
+			vendor = body[i+1:]
+			return
+		default:
+			elemLen := uint64(body[i])
+			i += 1 + elemLen
+			break
+		}
+	}
+
+	return ssid, vendor
 }
