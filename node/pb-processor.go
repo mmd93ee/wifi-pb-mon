@@ -70,8 +70,6 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 	if beaconNode.ptype == BeaconString {
 		cbeacon <- &beaconNode
 	} else if beaconNode.ptype == ProbeString {
-
-		fmt.Printf("DEBUG: %v", source)
 		cprobe <- &beaconNode
 	} else {
 		cnone <- &beaconNode
@@ -79,8 +77,6 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 }
 
 func decodeProbeRequestLayer(probeLayer *layers.Dot11MgmtProbeReq) (ssid string, vendor []byte) {
-
-	fmt.Println("DEBUG ENTERED PROBE DECODE")
 
 	var body []byte
 	body = probeLayer.LayerContents()
@@ -100,6 +96,7 @@ func decodeProbeRequestLayer(probeLayer *layers.Dot11MgmtProbeReq) (ssid string,
 			break
 		case layers.Dot11InformationElementIDVendor:
 			vendor = body[i+1:]
+			fmt.Println("DEBUG: Vendir: ", vendor)
 			return
 		default:
 			elemLen := uint64(body[i])
