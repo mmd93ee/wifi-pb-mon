@@ -78,8 +78,7 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 
 func decodeProbeRequestLayer(probeLayer *layers.Dot11MgmtProbeReq) (ssid string, vendor []byte) {
 
-	var body []byte
-	body = probeLayer.LayerContents()
+	body := probeLayer.LayerContents()
 	ssid = "ssid to be determined"
 
 	for i := uint64(0); i < uint64(len(body)); {
@@ -93,7 +92,7 @@ func decodeProbeRequestLayer(probeLayer *layers.Dot11MgmtProbeReq) (ssid string,
 				ssid = string(body[i : i+elemLen])
 				i += elemLen
 			}
-			break
+			//break
 		case layers.Dot11InformationElementIDVendor:
 			vendor = body[i+1:]
 			fmt.Println("DEBUG: Vendir: ", vendor)
@@ -101,7 +100,7 @@ func decodeProbeRequestLayer(probeLayer *layers.Dot11MgmtProbeReq) (ssid string,
 		default:
 			elemLen := uint64(body[i])
 			i += 1 + elemLen
-			break
+			//break
 		}
 	}
 

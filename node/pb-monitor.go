@@ -27,11 +27,11 @@ var (
 	timeout time.Duration = 30 * time.Second
 
 	// Command line variables
-	iface       string
-	pBuffer     int
-	rDetect     bool
-	filterBSSID string
-	debugOn     bool
+	iface      string
+	pBuffer    int
+	rDetect    bool
+	filterTran string
+	debugOn    bool
 )
 
 func main() {
@@ -40,7 +40,7 @@ func main() {
 	flag.StringVar(&iface, "i", "lo1", "Interface name to use")
 	flag.IntVar(&pBuffer, "b", 1000, "Maximum queue size for packet decode")
 	flag.BoolVar(&rDetect, "r", false, "Counter MAC Randomisation On")
-	flag.StringVar(&filterBSSID, "s", "all", "SSID Filter")
+	flag.StringVar(&filterTran, "f", "all", "Transmitter MAC Filter")
 	flag.BoolVar(&debugOn, "d", false, "Debug On")
 	flag.Parse()
 
@@ -49,7 +49,7 @@ func main() {
 	fmt.Println("  Interface: (-i): ", iface)
 	fmt.Println("  Packet Buffer Size (-b) : ", pBuffer)
 	fmt.Println("  Detect and Counter Random MAC (-r): ", rDetect)
-	fmt.Println("  BSSID Filter (-s): ", filterBSSID)
+	fmt.Println("  Transmitter MAC Filter (-f): ", filterTran)
 	fmt.Println("  Debug (-d): ", debugOn)
 
 	// Display the devices on the local machine
@@ -73,7 +73,7 @@ func main() {
 		select {
 		case data := <-chanBeacon:
 
-			if debugOn && len(data.ssid) > 0 {
+			if debugOn && len(data.ssid) > 0 && filterTran == data.transmitter {
 				fmt.Printf("DEBUG: AP BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %v\n Proto: %v\n Type: %v\n\n",
 					data.timestamp,
 					data.bssid,
@@ -88,7 +88,7 @@ func main() {
 		case data := <-chanProbe:
 
 			// IGNORE LINE: if debugOn && data.bssid == "ignore" {
-			if debugOn {
+			if debugOn && filterTran == data.transmitter {
 				fmt.Printf("DEBUG: PROBE PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n\n",
 					data.timestamp,
 					data.bssid,
@@ -105,7 +105,7 @@ func main() {
 
 		// Set a timeout on the channel to make sure we close the channel eventually if blocked.
 		case <-time.After(timeout):
-			err := "TIMEOUT ERROR ON CHANNEL: " + string(timeout) + " Seconds with no data recieved"
+			err := "TIMEOUT ERROR ON CHANNEL: " + fmt.Sprint(timeout) + " Seconds with no data recieved"
 			panic(err)
 
 		}
