@@ -34,10 +34,11 @@ func createPacketSource(iface string) *gopacket.PacketSource {
 func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *BeaconNode, cnone chan *BeaconNode, debugOn bool) {
 
 	source := *p
-	beaconNode := BeaconNode{source.Metadata().Timestamp.String(), "", "", "", "", "", 0000, ""}
+	beaconNode := BeaconNode{source.Metadata().Timestamp.String(), "", "", "", "", "", 0000, "", 0}
 	dot11 := source.Layer(layers.LayerTypeDot11)
 	dot11Info := source.Layer(layers.LayerTypeDot11InformationElement)
 	dot11Probe := source.Layer(layers.LayerTypeDot11MgmtProbeReq)
+	radioInfo := source.Layer(layers.LayerTypeRadioTap)
 
 	if nil != dot11 {
 
@@ -63,6 +64,11 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 	if nil != dot11Probe {
 		dot11Pr, _ := dot11Probe.(*layers.Dot11MgmtProbeReq)
 		beaconNode.ssid, _ = decodeProbeRequestLayer(dot11Pr)
+	}
+
+	if nil != radioInfo {
+		log.Printf("DEBUG: Found RadioTap Layer %v", radioInfo)
+
 	}
 
 	// Work out which channel to return down
