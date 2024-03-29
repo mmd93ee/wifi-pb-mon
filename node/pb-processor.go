@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -95,7 +94,6 @@ func decodeProbeRequestLayer(probeLayer *layers.Dot11MgmtProbeReq) (ssid string,
 			//break
 		case layers.Dot11InformationElementIDVendor:
 			vendor = body[i+1:]
-			fmt.Println("DEBUG: Vendor: ", vendor)
 			return
 		default:
 			elemLen := uint64(body[i])
