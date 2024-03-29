@@ -18,7 +18,7 @@ type BeaconNode struct {
 	receiver    string
 	proto       uint8
 	ptype       string
-	rPower      int
+	sigStrength int8
 }
 
 var (
@@ -80,7 +80,7 @@ func main() {
 		case data := <-chanBeacon:
 
 			if debugOn && len(data.ssid) > 0 {
-				log.Printf("DEBUG: AP BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %v\n Proto: %v\n Type: %v\n Radio Power: %v\n\n",
+				log.Printf("DEBUG: AP BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %v\n Proto: %v\n Type: %v\n Signal Strength: %v\n\n",
 					data.timestamp,
 					data.bssid,
 					data.ssid,
@@ -89,14 +89,14 @@ func main() {
 					data.pflag,
 					data.proto,
 					data.ptype,
-					data.rPower)
+					data.sigStrength)
 			}
 
 		case data := <-chanProbe:
 
 			// IGNORE LINE: if debugOn && data.bssid == "ignore" {
 			if debugOn {
-				log.Printf("DEBUG: PROBE PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n Radio Power:%v\n\n",
+				log.Printf("DEBUG: PROBE PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n Signal Strength:%v\n\n",
 					data.timestamp,
 					data.bssid,
 					data.ssid,
@@ -105,7 +105,7 @@ func main() {
 					data.pflag,
 					data.proto,
 					data.ptype,
-					data.rPower)
+					data.sigStrength)
 			}
 
 		// Do nothing channel - this is where anything that is not a Beacon or Probe ends up

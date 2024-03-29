@@ -55,20 +55,25 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 
 	if nil != dot11Info {
 		dot11InfoEl, _ := dot11Info.(*layers.Dot11InformationElement)
+		radioInfoEl, _ := radioInfo.(*layers.RadioTap)
+
 		if dot11InfoEl.ID.String() == layers.Dot11InformationElementIDSSID.String() {
 			beaconNode.ssid = string(dot11InfoEl.Info)
 
 		}
+
+		if nil != radioInfo {
+
+			beaconNode.sigStrength = getRadioTapAntennaSignal(radioInfoEl)
+			log.Printf("DEBUG: Found RadioTap Layer %v", radioInfo)
+
+		}
+
 	}
 
 	if nil != dot11Probe {
 		dot11Pr, _ := dot11Probe.(*layers.Dot11MgmtProbeReq)
 		beaconNode.ssid, _ = decodeProbeRequestLayer(dot11Pr)
-	}
-
-	if nil != radioInfo {
-		log.Printf("DEBUG: Found RadioTap Layer %v", radioInfo)
-
 	}
 
 	// Work out which channel to return down
@@ -109,4 +114,13 @@ func decodeProbeRequestLayer(probeLayer *layers.Dot11MgmtProbeReq) (ssid string,
 	}
 
 	return ssid, vendor
+}
+
+func getRadioTapAntennaSignal(radioTapLayer *layers.RadioTap) (antsig int8) {
+
+	radioLayer := radioTapLayer
+	antsig = radioLayer.DBMAntennaSignal
+
+	return antsig
+
 }
