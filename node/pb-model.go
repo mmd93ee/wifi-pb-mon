@@ -1,8 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
+import "log"
 
 // A node represents an AP, device or other transmitting/recieving address including broadcast
 type Node struct {
@@ -29,7 +27,7 @@ type Graph struct {
 func newGraph(debug bool) *Graph {
 
 	if debugOn {
-		fmt.Printf("DEBUG: Creating Graph model\n")
+		log.Printf("DEBUG: Creating Graph model\n")
 	}
 	return &Graph{
 		nodes: make(map[string]*Node),

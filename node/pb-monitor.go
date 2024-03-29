@@ -79,7 +79,7 @@ func main() {
 		case data := <-chanBeacon:
 
 			if debugOn && len(data.ssid) > 0 {
-				fmt.Printf("DEBUG: AP BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %v\n Proto: %v\n Type: %v\n\n",
+				log.Printf("DEBUG: AP BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %v\n Proto: %v\n Type: %v\n\n",
 					data.timestamp,
 					data.bssid,
 					data.ssid,
@@ -94,7 +94,7 @@ func main() {
 
 			// IGNORE LINE: if debugOn && data.bssid == "ignore" {
 			if debugOn {
-				fmt.Printf("DEBUG: PROBE PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n\n",
+				log.Printf("DEBUG: PROBE PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n\n",
 					data.timestamp,
 					data.bssid,
 					data.ssid,
