@@ -57,6 +57,11 @@ func main() {
 		displayDevices()
 	}
 
+	// Create a Graph model
+	nodeGraph := newGraph(debugOn)
+
+	fmt.Printf("Graph: %v\n", nodeGraph)
+
 	// Create a PacketSource and Channels
 	packetSource := createPacketSource(iface)
 
