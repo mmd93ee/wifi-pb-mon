@@ -40,7 +40,7 @@ func main() {
 	flag.StringVar(&iface, "i", "lo1", "Interface name to use")
 	flag.IntVar(&pBuffer, "b", 1000, "Maximum queue size for packet decode")
 	flag.BoolVar(&rDetect, "r", false, "Counter MAC Randomisation On")
-	flag.StringVar(&filterTran, "f", "all", "Transmitter MAC Filter")
+	flag.StringVar(&filterTran, "f", "all", "Transmitter MAC Filter (not implemented yet)")
 	flag.BoolVar(&debugOn, "d", false, "Debug On")
 	flag.Parse()
 
@@ -49,7 +49,7 @@ func main() {
 	fmt.Println("  Interface: (-i): ", iface)
 	fmt.Println("  Packet Buffer Size (-b) : ", pBuffer)
 	fmt.Println("  Detect and Counter Random MAC (-r): ", rDetect)
-	fmt.Println("  Transmitter MAC Filter (-f): ", filterTran)
+	fmt.Println("  Transmitter MAC Filter (not yet available) (-f): ", filterTran)
 	fmt.Println("  Debug (-d): ", debugOn)
 
 	// Display the devices on the local machine
@@ -73,7 +73,7 @@ func main() {
 		select {
 		case data := <-chanBeacon:
 
-			if debugOn && len(data.ssid) > 0 && filterTran == data.transmitter {
+			if debugOn && len(data.ssid) > 0 {
 				fmt.Printf("DEBUG: AP BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %v\n Proto: %v\n Type: %v\n\n",
 					data.timestamp,
 					data.bssid,
@@ -88,7 +88,7 @@ func main() {
 		case data := <-chanProbe:
 
 			// IGNORE LINE: if debugOn && data.bssid == "ignore" {
-			if debugOn && filterTran == data.transmitter {
+			if debugOn {
 				fmt.Printf("DEBUG: PROBE PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n\n",
 					data.timestamp,
 					data.bssid,
