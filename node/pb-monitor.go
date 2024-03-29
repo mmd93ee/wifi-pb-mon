@@ -73,6 +73,8 @@ func main() {
 		select {
 		case data := <-chanBeacon:
 
+			fmt.Printf("Tran: %v Filt: %v", data.transmitter, filterTran)
+
 			if debugOn && len(data.ssid) > 0 && filterTran == data.transmitter {
 				fmt.Printf("DEBUG: AP BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %v\n Proto: %v\n Type: %v\n\n",
 					data.timestamp,

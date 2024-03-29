@@ -95,7 +95,7 @@ func decodeProbeRequestLayer(probeLayer *layers.Dot11MgmtProbeReq) (ssid string,
 			//break
 		case layers.Dot11InformationElementIDVendor:
 			vendor = body[i+1:]
-			fmt.Println("DEBUG: Vendir: ", vendor)
+			fmt.Println("DEBUG: Vendor: ", vendor)
 			return
 		default:
 			elemLen := uint64(body[i])
