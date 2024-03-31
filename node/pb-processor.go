@@ -92,7 +92,7 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 func decodeProbeRequestLayer(probeLayer *layers.Dot11MgmtProbeReq) (ssid string, vendor []byte) {
 
 	body := probeLayer.LayerContents()
-	ssid = "ssid to be determined"
+	ssid = ""
 
 	for i := uint64(0); i < uint64(len(body)); {
 		id := layers.Dot11InformationElementID(body[i])
