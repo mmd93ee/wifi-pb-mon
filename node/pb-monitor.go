@@ -33,6 +33,11 @@ var (
 	rDetect    bool
 	filterTran string
 	debugOn    bool
+
+	// Counters
+	ProbeCount  int
+	BeaconCount int
+	NoneCount   int
 )
 
 func main() {
@@ -52,6 +57,11 @@ func main() {
 	fmt.Println("  Detect and Counter Random MAC (-r): ", rDetect)
 	fmt.Println("  Transmitter MAC Filter (not yet available) (-f): ", filterTran)
 	fmt.Println("  Debug (-d): ", debugOn)
+
+	// Initialiase Counters
+	BeaconCount = 0
+	ProbeCount = 0
+	NoneCount = 0
 
 	// Display the devices on the local machine
 	if debugOn {
@@ -77,39 +87,25 @@ func main() {
 		go Dot11GetElement(&packet, chanBeacon, chanProbe, chanNone, debugOn)
 
 		select {
+
 		case data := <-chanBeacon:
 
+			BeaconCount++
 			if debugOn && len(data.ssid) > 0 {
-				log.Printf("DEBUG: AP BEACON PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %v\n Proto: %v\n Type: %v\n Signal Strength: %v\n\n",
-					data.timestamp,
-					data.bssid,
-					data.ssid,
-					data.transmitter,
-					data.receiver,
-					data.pflag,
-					data.proto,
-					data.ptype,
-					data.sigStrength)
+				PrintBeaconDetail("BEACON", data)
 			}
 
 		case data := <-chanProbe:
 
-			// IGNORE LINE: if debugOn && data.bssid == "ignore" {
+			ProbeCount++
 			if debugOn {
-				log.Printf("DEBUG: PROBE PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n Signal Strength:%v\n\n",
-					data.timestamp,
-					data.bssid,
-					data.ssid,
-					data.transmitter,
-					data.receiver,
-					data.pflag,
-					data.proto,
-					data.ptype,
-					data.sigStrength)
+				PrintBeaconDetail("PROBE", data)
 			}
 
 		// Do nothing channel - this is where anything that is not a Beacon or Probe ends up
 		case <-chanNone:
+
+			NoneCount++
 
 		// Set a timeout on the channel to make sure we close the channel eventually if blocked.
 		case <-time.After(timeout):
@@ -139,4 +135,22 @@ func displayDevices() {
 			fmt.Println("    Subnet mask: ", address.Netmask)
 		}
 	}
+}
+
+func PrintBeaconDetail(t string, data *BeaconNode) {
+
+	log.Printf("DEBUG: Probe Count: %s Beacon Count: %s Unmatched Count: %s\n\n %s PACKET: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n Signal Strength:%v\n\n",
+		ProbeCount,
+		BeaconCount,
+		NoneCount,
+		t,
+		data.timestamp,
+		data.bssid,
+		data.ssid,
+		data.transmitter,
+		data.receiver,
+		data.pflag,
+		data.proto,
+		data.ptype,
+		data.sigStrength)
 }
