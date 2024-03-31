@@ -58,7 +58,6 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 
 		if dot11InfoEl.ID.String() == layers.Dot11InformationElementIDSSID.String() {
 			beaconNode.ssid = string(dot11InfoEl.Info)
-
 		}
 
 		// Get the signal strength if we have a Beacon
@@ -80,12 +79,14 @@ func Dot11GetElement(p *gopacket.Packet, cbeacon chan *BeaconNode, cprobe chan *
 	}
 
 	// Work out which channel to return down
-	if beaconNode.ptype == BeaconString {
+	if beaconNode.ssid == "" { // Blank SSID is not processed
+		cnone <- &beaconNode
+	} else if beaconNode.ptype == BeaconString {
 		cbeacon <- &beaconNode
 	} else if beaconNode.ptype == ProbeString {
 		cprobe <- &beaconNode
 	} else {
-		cnone <- &beaconNode
+		cnone <- &beaconNode // Everything else goes to the none channel
 	}
 }
 
