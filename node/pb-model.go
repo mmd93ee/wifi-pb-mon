@@ -35,6 +35,7 @@ func newGraph(debugOn bool) NodeList {
 	}
 }
 
+// Beacon Packets all originate from a broadcasting access point.  Associations do not exist since they are advertising packets.
 func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 
 	newNode := createNodeFromBeacon(inNode)
@@ -58,8 +59,36 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		graph.nodes[newNode.knownAs] = &newNode
 
 		if debugOn {
-			log.Printf("DEBUG: New node %v added to Graph List\n\n", inNode.ssid)
+			log.Printf("DEBUG: New node %v added to Graph List\n", inNode.ssid)
 		}
+	}
+
+	if val.nodeType == "MgmtProbeReq" { // Probe request, update the associations and make sure both ends of the probe exist
+
+		if debugOn {
+			log.Printf("DEBUG: Adding associations from probe request\n")
+		}
+
+		valAssoc, ok := graph.nodes[newNode.ssid] // Check if we have the node that is being probed
+
+		if !ok { // Create a skeleton endpoint for the probe and add to the Graph List.
+
+			if debugOn {
+				log.Printf("DEBUG: Probe request to an undiscovered SSID: %v so adding as new node\n", val.ssid)
+			}
+			assocNode := Node{knownAs: val.ssid}
+			graph.nodes[assocNode.knownAs] = &assocNode
+
+			valAssoc = graph.nodes[newNode.ssid]
+		}
+
+		// Add probe packet knownAs to the SSID knownAs and vice versa
+
+		if debugOn {
+			log.Printf("DEBUG: Adding %v to node %v and vice versa\n", valAssoc.ssid, val.ssid)
+		}
+		val.associations = append(val.associations, valAssoc)
+		valAssoc.associations = append(valAssoc.associations, val)
 	}
 
 	return true
@@ -70,7 +99,19 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 
 	n := Node{}
 
-	n.knownAs = beacon.ssid // All Beaconing nodes are known by the SSID
+	// Data settings based on BeaconProbe type
+	switch n.nodeType {
+
+	case "MgmtProbReq":
+		n.knownAs = beacon.ssid
+
+	case "BeaconNode":
+		n.knownAs = beacon.transmitter
+
+	default:
+		n.knownAs = beacon.ssid
+	}
+
 	n.ssid = beacon.ssid
 	n.bssid = append(n.bssid, beacon.bssid)
 	n.nodeType = beacon.ptype
