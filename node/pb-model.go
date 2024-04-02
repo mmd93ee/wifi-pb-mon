@@ -47,7 +47,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		val.seen = append(val.seen, inNode.timestamp)
 
 		if debugOn {
-			log.Printf("DEBUG: Updating node %v, seen %v times on %v transmitting addresses with strength (last 5) %v\n\n",
+			log.Printf("DEBUG: Updating node %v, seen %v times on %v transmitting addresses with strength (last 5) %v\n",
 				inNode.ssid,
 				val.timesSeen,
 				len(val.transmitterAddresses),
