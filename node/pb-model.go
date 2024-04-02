@@ -87,8 +87,8 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		val.associations = append(val.associations, valAssoc)
 		valAssoc.associations = append(valAssoc.associations, val)
 
-		// Remove SSID from the probe target
-		valAssoc.ssid = ""
+		// Remove SSID from the probe target - bit of a hack...
+		val.ssid = ""
 
 		if debugOn {
 			log.Printf("DEBUG: Added %v to node %v and vice versa\n", valAssoc.knownAs, val.knownAs)
