@@ -66,7 +66,6 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 
 	if val.nodeType == "MgmtProbeReq" { // Probe request, update the associations and make sure both ends of the probe exist
 
-		val.ssid = "<probe>"
 		if debugOn {
 			log.Printf("DEBUG: Adding associations from probe request\n")
 		}
@@ -85,9 +84,11 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		}
 
 		// Add probe packet knownAs to the SSID knownAs and vice versa
-
 		val.associations = append(val.associations, valAssoc)
 		valAssoc.associations = append(valAssoc.associations, val)
+
+		// Remove SSID from the probe target
+		valAssoc.ssid = ""
 
 		if debugOn {
 			log.Printf("DEBUG: Added %v to node %v and vice versa\n", valAssoc.knownAs, val.knownAs)
