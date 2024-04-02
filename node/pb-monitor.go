@@ -100,7 +100,7 @@ func main() {
 			}
 
 			if addNodeFromBeacon(&NodeGraph, data, debugOn) {
-				log.Printf("Successfully added Beaconnode for SSID %v.  Node count: %v", data.ssid, len(NodeGraph.nodes))
+				log.Printf("Successfully added Beaconnode for SSID %v.  Node count: %v\n", data.ssid, len(NodeGraph.nodes))
 			}
 
 		case data := <-chanProbe:
