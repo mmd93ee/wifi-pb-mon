@@ -111,7 +111,7 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 
 		n.knownAs = beacon.transmitter
 
-	case "BeaconNode":
+	case "MgmtBeacon":
 
 		if debugOn {
 			log.Printf("DEBUG: Beacon request (%v), setting KnownAs to %v\n", beacon.ptype, beacon.ssid)
