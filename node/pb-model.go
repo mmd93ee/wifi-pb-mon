@@ -85,11 +85,12 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 
 		// Add probe packet knownAs to the SSID knownAs and vice versa
 
-		if debugOn {
-			log.Printf("DEBUG: Adding %v to node %v and vice versa\n", valAssoc.knownAs, val.knownAs)
-		}
 		val.associations = append(val.associations, valAssoc)
 		valAssoc.associations = append(valAssoc.associations, val)
+
+		if debugOn {
+			log.Printf("DEBUG: Added %v to node %v and vice versa\n", valAssoc, val)
+		}
 	}
 
 	return true
