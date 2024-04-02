@@ -57,6 +57,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 
 	} else { // Not an existing SSID
 		graph.nodes[newNode.knownAs] = &newNode
+		val = graph.nodes[newNode.knownAs] // Set val to the newly created Node
 
 		if debugOn {
 			log.Printf("DEBUG: New node %v added to Graph List\n", inNode.ssid)
