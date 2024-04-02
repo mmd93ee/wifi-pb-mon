@@ -104,10 +104,20 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 	switch n.nodeType {
 
 	case "MgmtProbReq":
-		n.knownAs = beacon.ssid
+
+		if debugOn {
+			log.Printf("DEBUG: Probe request, setting KnownAs to %v\n", beacon.transmitter)
+		}
+
+		n.knownAs = beacon.transmitter
 
 	case "BeaconNode":
-		n.knownAs = beacon.transmitter
+
+		if debugOn {
+			log.Printf("DEBUG: Beacon request, setting KnownAs to %v\n", beacon.ssid)
+		}
+
+		n.knownAs = beacon.ssid
 
 	default:
 		n.knownAs = beacon.ssid
