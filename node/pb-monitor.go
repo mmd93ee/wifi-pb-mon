@@ -24,7 +24,6 @@ type BeaconNode struct {
 var (
 
 	// Global variables
-	// usage string = "USAGE: pb-monitor.go -i <interface name> -b <buffer entries> -r <Counter MAC Randomisation> -s <SSID filter value>"
 	timeout time.Duration = 30 * time.Second
 
 	// Command line variables
@@ -38,6 +37,9 @@ var (
 	ProbeCount  int
 	BeaconCount int
 	NoneCount   int
+
+	// Data model
+	NodeGraph NodeList
 )
 
 func main() {
@@ -63,15 +65,17 @@ func main() {
 	ProbeCount = 0
 	NoneCount = 0
 
+	// Set up the Graph data model
+
 	// Display the devices on the local machine
 	if debugOn {
 		displayDevices()
 	}
 
 	// Create a Graph model
-	nodeGraph := newGraph(debugOn)
+	NodeGraph = newGraph(debugOn)
 
-	fmt.Printf("Graph: %v\n", nodeGraph)
+	fmt.Printf("Graph: %v\n", NodeGraph)
 
 	// Create a PacketSource and Channels
 	packetSource := createPacketSource(iface)
@@ -93,6 +97,10 @@ func main() {
 			BeaconCount++
 			if debugOn && len(data.ssid) > 0 {
 				PrintBeaconDetail("BEACON", data)
+			}
+
+			if addNodeFromBeacon(&NodeGraph, data, debugOn) {
+				log.Printf("Successfully added Beaconnode for SSID %v.  Node count: %v", data.ssid, len(NodeGraph.nodes))
 			}
 
 		case data := <-chanProbe:

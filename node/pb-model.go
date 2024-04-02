@@ -5,13 +5,12 @@ import "log"
 // A node represents an AP, device or other transmitting/recieving address including broadcast
 type Node struct {
 	// Adjacency information
-	inNodes  []*Node
-	outNodes []*Node
+	associations []*Node
 
 	// Node data
 	knownAs            string
-	SSID               string
-	BSSID              string
+	ssid               string
+	bssid              string
 	nodeType           string
 	transmitterAddress string
 	timesSeen          int
@@ -20,20 +19,26 @@ type Node struct {
 	firstSeen          string
 }
 
-type Graph struct {
+type NodeList struct {
 	nodes map[string]*Node
 }
 
-func newGraph(debug bool) *Graph {
+func newGraph(debugOn bool) NodeList {
 
 	if debugOn {
 		log.Printf("DEBUG: Creating Graph model\n")
 	}
-	return &Graph{
+
+	return NodeList{
 		nodes: make(map[string]*Node),
 	}
 }
 
-func addNode(debug bool) {
+func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 
+	if debugOn {
+		log.Printf("Adding node %v to %v", inNode, graph)
+	}
+
+	return true
 }
