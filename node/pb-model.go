@@ -80,7 +80,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 			assocNode := Node{knownAs: val.ssid}
 			graph.nodes[assocNode.knownAs] = &assocNode
 
-			valAssoc = graph.nodes[newNode.knownAs]
+			valAssoc = graph.nodes[assocNode.knownAs]
 		}
 
 		// Add probe packet knownAs to the SSID knownAs and vice versa
