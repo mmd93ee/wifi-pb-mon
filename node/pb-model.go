@@ -66,6 +66,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 
 	if val.nodeType == "MgmtProbeReq" { // Probe request, update the associations and make sure both ends of the probe exist
 
+		val.ssid = "<probe>"
 		if debugOn {
 			log.Printf("DEBUG: Adding associations from probe request\n")
 		}
@@ -75,9 +76,9 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		if !ok { // Create a skeleton endpoint for the probe and add to the Graph List.
 
 			if debugOn {
-				log.Printf("DEBUG: Probe request to an undiscovered SSID: %v so adding as new node\n", val.ssid)
+				log.Printf("DEBUG: Probe request to an undiscovered SSID: %v so adding as new node\n", newNode.ssid)
 			}
-			assocNode := Node{knownAs: val.ssid}
+			assocNode := Node{knownAs: newNode.ssid}
 			graph.nodes[assocNode.knownAs] = &assocNode
 
 			valAssoc = graph.nodes[assocNode.knownAs]
