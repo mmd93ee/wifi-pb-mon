@@ -101,12 +101,12 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 	n := Node{}
 
 	// Data settings based on BeaconProbe type
-	switch n.nodeType {
+	switch beacon.ptype {
 
 	case "MgmtProbReq":
 
 		if debugOn {
-			log.Printf("DEBUG: Probe request, setting KnownAs to %v\n", beacon.transmitter)
+			log.Printf("DEBUG: Probe request (%v), setting KnownAs to %v\n", beacon.ptype, beacon.transmitter)
 		}
 
 		n.knownAs = beacon.transmitter
@@ -114,7 +114,7 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 	case "BeaconNode":
 
 		if debugOn {
-			log.Printf("DEBUG: Beacon request, setting KnownAs to %v\n", beacon.ssid)
+			log.Printf("DEBUG: Beacon request (%v), setting KnownAs to %v\n", beacon.ptype, beacon.ssid)
 		}
 
 		n.knownAs = beacon.ssid
@@ -122,7 +122,7 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 	default:
 
 		if debugOn {
-			log.Printf("DEBUG: Undefined packet type, setting KnownAs to default of %v\n", beacon.ssid)
+			log.Printf("DEBUG: Default packet type applied to %v, setting KnownAs to %v\n", beacon.ptype, beacon.ssid)
 		}
 
 		n.knownAs = beacon.ssid
