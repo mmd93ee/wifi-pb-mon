@@ -1,6 +1,8 @@
 package main
 
-import "log"
+import (
+	"log"
+)
 
 // A node represents an AP, device or other transmitting/recieving address including broadcast
 type Node struct {
@@ -8,15 +10,14 @@ type Node struct {
 	associations []*Node
 
 	// Node data
-	knownAs            string
-	ssid               string
-	bssid              string
-	nodeType           string
-	transmitterAddress string
-	timesSeen          int
-	strength           int8
-	lastSeen           string
-	firstSeen          string
+	knownAs              string
+	ssid                 string
+	bssid                []string
+	nodeType             string
+	transmitterAddresses []string
+	timesSeen            int
+	strength             []int8
+	seen                 []string
 }
 
 type NodeList struct {
@@ -42,8 +43,8 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 	if ok {
 		// Found a matching knownAs in the Node List, update values
 		val.timesSeen++
-		val.strength = newNode.strength
-		val.lastSeen = newNode.lastSeen
+		val.strength = append(val.strength, newNode.strength[0])
+		val.seen = append(val.seen, inNode.timestamp)
 
 		if debugOn {
 			log.Printf("DEBUG: Updating node %v, seen %v times with strength %v\n", inNode.ssid, val.timesSeen, val.strength)
@@ -67,13 +68,12 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 
 	n.knownAs = beacon.ssid // All Beaconing nodes are known by the SSID
 	n.ssid = beacon.ssid
-	n.bssid = beacon.bssid
-	n.nodeType = "Beaconing Node"
-	n.transmitterAddress = beacon.transmitter
+	n.bssid = append(n.bssid, beacon.bssid)
+	n.nodeType = beacon.ptype
+	n.transmitterAddresses = append(n.transmitterAddresses, beacon.transmitter)
 	n.timesSeen = 1 // Default is 1, this may increase if it already exists in Node List
-	n.strength = beacon.sigStrength
-	n.lastSeen = beacon.timestamp  // This is now
-	n.firstSeen = beacon.timestamp // This may become earlier when compared to any existing SSID's in Node List
+	n.strength = append(n.strength, beacon.sigStrength)
+	n.seen = append(n.seen, beacon.timestamp) // This is now
 
 	return n
 
