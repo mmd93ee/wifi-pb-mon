@@ -92,7 +92,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 			log.Printf("DEBUG: Added %v to node %v and vice versa\n", valAssoc.knownAs, val.knownAs)
 			log.Println("FROM NODE: ")
 			PrintNodeDetail(val)
-			log.Println("FROM NODE: ")
+			log.Println("TO NODE: ")
 			PrintNodeDetail(valAssoc)
 
 		}
