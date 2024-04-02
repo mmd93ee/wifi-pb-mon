@@ -103,7 +103,7 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 	// Data settings based on BeaconProbe type
 	switch beacon.ptype {
 
-	case "MgmtProbReq":
+	case "MgmtProbeReq":
 
 		if debugOn {
 			log.Printf("DEBUG: Probe request (%v), setting KnownAs to %v\n", beacon.ptype, beacon.transmitter)
