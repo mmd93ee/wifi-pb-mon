@@ -60,7 +60,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		val = graph.nodes[newNode.knownAs] // Set val to the newly created Node
 
 		if debugOn {
-			log.Printf("DEBUG: New node %v added to Graph List\n", inNode.ssid)
+			log.Printf("DEBUG: New node %v added to Graph List\n", val.knownAs)
 		}
 	}
 
@@ -77,7 +77,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 			if debugOn {
 				log.Printf("DEBUG: Probe request to an undiscovered SSID: %v so adding as new node\n", val.ssid)
 			}
-			assocNode := Node{knownAs: val.knownAs}
+			assocNode := Node{knownAs: val.ssid}
 			graph.nodes[assocNode.knownAs] = &assocNode
 
 			valAssoc = graph.nodes[newNode.knownAs]
