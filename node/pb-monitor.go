@@ -100,7 +100,7 @@ func main() {
 			}
 
 			if addNodeFromBeacon(&NodeGraph, data, debugOn) {
-				log.Printf("DEBUG: Successfully processed BeaconNode for %v\n", data.ssid)
+				log.Printf("DEBUG: Successfully processed BeaconNode for %v\n\n", data.ssid)
 			}
 
 		case data := <-chanProbe:
@@ -147,7 +147,7 @@ func displayDevices() {
 
 func PrintBeaconDetail(t string, data *BeaconNode) {
 
-	log.Printf("DEBUG PACKET:\n TOTALS:\n Probe Count: %v\n Beacon Count: %v (%v unique stations)\n Unmatched Count: %v\n\n %s: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n Signal Strength:%v\n\n",
+	log.Printf("DEBUG PACKET:\n TOTALS:\n Probe Count: %v\n Beacon Count: %v (%v SSIDs)\n Unmatched Count: %v\n\n %s: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n Signal Strength:%v\n\n",
 		ProbeCount,
 		BeaconCount,
 		len(NodeGraph.nodes),
