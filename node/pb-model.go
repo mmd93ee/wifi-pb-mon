@@ -120,6 +120,11 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 		n.knownAs = beacon.ssid
 
 	default:
+
+		if debugOn {
+			log.Printf("DEBUG: Undefined packet type, setting KnownAs to default of %v\n", beacon.ssid)
+		}
+
 		n.knownAs = beacon.ssid
 	}
 
