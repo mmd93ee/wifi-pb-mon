@@ -167,3 +167,18 @@ func PrintBeaconDetail(t string, data *BeaconNode) {
 		data.ptype,
 		data.sigStrength)
 }
+
+func PrintNodeDetail(data *Node) {
+
+	log.Printf("DEBUG: NODE:\n Known As: %s\n SSID: %s\n BSSID: %s\n Node Type: %v\n Transmitter Addresses: %v\n Times Seen: %v\n Strengths: %v\n Seen: %s\n Associations: %v\n\n",
+		data.knownAs,
+		data.ssid,
+		data.bssid,
+		data.nodeType,
+		data.transmitterAddresses,
+		data.timesSeen,
+		data.strength,
+		data.seen,
+		data.associations)
+
+}

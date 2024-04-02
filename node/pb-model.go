@@ -89,7 +89,12 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		valAssoc.associations = append(valAssoc.associations, val)
 
 		if debugOn {
-			log.Printf("DEBUG: Added %v to node %v and vice versa\n", valAssoc, val)
+			log.Printf("DEBUG: Added %v to node %v and vice versa\n", valAssoc.knownAs, val.knownAs)
+			log.Println("FROM NODE: ")
+			PrintNodeDetail(val)
+			log.Println("FROM NODE: ")
+			PrintNodeDetail(valAssoc)
+
 		}
 	}
 
