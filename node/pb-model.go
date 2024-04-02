@@ -37,7 +37,7 @@ func newGraph(debugOn bool) NodeList {
 func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 
 	if debugOn {
-		log.Printf("Adding node %v to %v\n", inNode, graph)
+		log.Printf("DEBUG: Adding node %v to %v\n", &inNode, &graph)
 	}
 
 	return true
