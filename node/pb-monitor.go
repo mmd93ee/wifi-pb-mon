@@ -147,7 +147,7 @@ func displayDevices() {
 
 func PrintBeaconDetail(t string, data *BeaconNode) {
 
-	log.Printf("DEBUG PACKET:\n TOTALS:\n Probe Count: %v Beacon Count: %v Unmatched Count: %v\n\n %s: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n Signal Strength:%v\n\n",
+	log.Printf("DEBUG PACKET:\n TOTALS:\n Probe Count: %v\n Beacon Count: %v\n Unmatched Count: %v\n\n %s: \n Time: %s\n BSSID: %s\n SSID: %s\n Transmitter: %v\n Receiver: %v\n Flags: %s\n Proto: %v\n Type: %s\n Signal Strength:%v\n\n",
 		ProbeCount,
 		BeaconCount,
 		NoneCount,
