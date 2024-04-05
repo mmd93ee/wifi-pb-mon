@@ -100,7 +100,9 @@ func main() {
 			}
 
 			if addNodeFromBeacon(&NodeGraph, data, debugOn) {
-				log.Printf("DEBUG: Successfully processed BeaconNode (Beacon) for %v\n\n", data.ssid)
+				if debugOn {
+					log.Printf("DEBUG: Successfully processed BeaconNode (Beacon) for %v\n\n", data.ssid)
+				}
 			}
 
 		case data := <-chanProbe:
@@ -111,7 +113,9 @@ func main() {
 			}
 
 			if addNodeFromBeacon(&NodeGraph, data, debugOn) {
-				log.Printf("DEBUG: Successfully processed BeaconNode (Probe) for %v\n\n", data.ssid)
+				if debugOn {
+					log.Printf("DEBUG: Successfully processed BeaconNode (Probe) for %v\n\n", data.ssid)
+				}
 			}
 
 		// Do nothing channel - this is where anything that is not a Beacon or Probe ends up
