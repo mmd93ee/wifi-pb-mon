@@ -46,7 +46,7 @@ func main() {
 
 	// Set flags
 	flag.StringVar(&iface, "i", "lo1", "Interface name to use")
-	flag.IntVar(&pBuffer, "b", 1000, "Maximum queue size for packet decode")
+	flag.IntVar(&pBuffer, "b", 10, "Maximum queue size for packet decode")
 	flag.BoolVar(&rDetect, "r", false, "Counter MAC Randomisation On")
 	flag.StringVar(&filterTran, "f", "all", "Transmitter MAC Filter (not implemented yet)")
 	flag.BoolVar(&debugOn, "d", false, "Debug On")

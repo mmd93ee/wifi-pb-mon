@@ -107,6 +107,8 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 func createNodeFromBeacon(beacon *BeaconNode) Node {
 
 	n := Node{}
+	n.strength = make([]int8, pBuffer)
+	n.seen = make([]string, pBuffer)
 
 	// Data settings based on BeaconProbe type
 	switch beacon.ptype {
@@ -141,7 +143,7 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 	n.nodeType = beacon.ptype
 	n.transmitterAddresses = append(n.transmitterAddresses, beacon.transmitter)
 	n.timesSeen = 1 // Default is 1, this may increase if it already exists in Node List
-	n.strength = append(n.strength, beacon.sigStrength)
+	n.strength = updateBufferedStrength(n.strength, beacon.sigStrength, debugOn)
 	n.seen = append(n.seen, beacon.timestamp) // This is now
 
 	return n
@@ -149,10 +151,16 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 }
 
 // Stength and Seen need to be fixed length to avoid infinite growth
-func updateBufferedStrength(strengths []int8, s int8, debugOn bool) {
+func updateBufferedStrength(strengths []int8, s int8, debugOn bool) []int8 {
 
 	if debugOn {
 		log.Printf("DEBUG: Updating strength buffer on node, value to add %v\n", s)
 	}
+
+	// Pop and shift the slice - pop currently disappears - then add the new value to the end
+	_, strengths = strengths[0], strengths[1:]
+	strengths = append(strengths, s)
+
+	return strengths
 
 }
