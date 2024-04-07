@@ -158,7 +158,7 @@ func updateBufferedStrength(strengths []int8, s int8, debugOn bool) []int8 {
 
 	if debugOn {
 		log.Printf("DEBUG: Updating Signal Strength buffer on node, value to add %v\n", s)
-		log.Printf("DEBUG: Signal Strength buffer before change: %v\n", s)
+		log.Printf("DEBUG: Signal Strength buffer before change: %v\n", strengths)
 	}
 
 	// Pop and shift the slice - pop currently disappears - then add the new value to the end
@@ -166,7 +166,7 @@ func updateBufferedStrength(strengths []int8, s int8, debugOn bool) []int8 {
 	strengths = append(strengths, s)
 
 	if debugOn {
-		log.Printf("DEBUG: Signal Strength buffer after change: %v\n", s)
+		log.Printf("DEBUG: Signal Strength buffer after change: %v\n", strengths)
 	}
 
 	return strengths
@@ -178,7 +178,7 @@ func updateBufferedTimes(times []string, t string, debugOn bool) []string {
 
 	if debugOn {
 		log.Printf("DEBUG: Updating Times Seen buffer on node, value to add %v\n", t)
-		log.Printf("DEBUG: Times Seen buffer before change: %v\n", t)
+		log.Printf("DEBUG: Times Seen buffer before change: %v\n", times)
 	}
 
 	// Pop and shift the slice - pop currently disappears - then add the new value to the end
@@ -186,7 +186,7 @@ func updateBufferedTimes(times []string, t string, debugOn bool) []string {
 	times = append(times, t)
 
 	if debugOn {
-		log.Printf("DEBUG: Times Seen buffer after change: %v\n", t)
+		log.Printf("DEBUG: Times Seen buffer after change: %v\n", times)
 	}
 
 	return times
