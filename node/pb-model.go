@@ -161,8 +161,12 @@ func updateBufferedStrength(strengths []int8, s int8, debugOn bool) []int8 {
 	}
 
 	// Pop and shift the slice - pop currently disappears - then add the new value to the end
+
+	log.Printf("DEBUG: Strengths Pre: %v", strengths)
 	_, strengths = strengths[0], strengths[1:]
+	log.Printf("DEBUG: Strengths Post Pop: %v", strengths)
 	strengths = append(strengths, s)
+	log.Printf("DEBUG: Strengths Post Append: %v", strengths)
 
 	return strengths
 
