@@ -36,15 +36,18 @@ func newGraph(debugOn bool) NodeList {
 }
 
 // Beacon Packets all originate from a broadcasting access point.  Associations do not exist since they are advertising packets.
+// Function takes a packet and then creates a new node.  The new node then either updates an existing or creates a new node.
 func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 
+	// In all cases create a new node as a base to work against
 	newNode := createNodeFromBeacon(inNode)
 
+	// See if the 'knownAs' value exists in the list of all known nodes
 	val, ok := graph.nodes[newNode.knownAs]
 	if ok {
 		// Found a matching knownAs in the Node List, update values
 		val.timesSeen++
-		val.strength = updateBufferedStrength(val.strength, newNode.strength[0], debugOn)
+		val.strength = updateBufferedStrength(val.strength, newNode.strength[pBuffer], debugOn)
 		val.seen = append(val.seen, inNode.timestamp)
 
 		if debugOn {
@@ -55,7 +58,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 				val.strength[:5])
 		}
 
-	} else { // Not an existing SSID
+	} else { // Not an existing 'knownAs' so we need a new node
 		graph.nodes[newNode.knownAs] = &newNode
 		val = graph.nodes[newNode.knownAs] // Set val to the newly created Node
 
