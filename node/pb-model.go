@@ -48,7 +48,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		// Found a matching knownAs in the Node List, update values (turn off Debug to stop noise.)
 		val.timesSeen++
 		val.strength = updateBufferedStrength(val.strength, inNode.sigStrength, false)
-		val.seen = append(val.seen, inNode.timestamp)
+		val.seen = updateBufferedTimes(val.seen, inNode.timestamp, false)
 
 		if debugOn {
 			log.Printf("DEBUG: Updating node %v, seen %v times on %v transmitting addresses with strength (last 5) %v\n",
@@ -147,7 +147,7 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 	n.transmitterAddresses = append(n.transmitterAddresses, beacon.transmitter)
 	n.timesSeen = 1 // Default is 1, this may increase if it already exists in Node List
 	n.strength = updateBufferedStrength(n.strength, beacon.sigStrength, debugOn)
-	n.seen = append(n.seen, beacon.timestamp) // This is now
+	n.seen = updateBufferedTimes(n.seen, beacon.timestamp, debugOn)
 
 	return n
 
@@ -157,17 +157,38 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 func updateBufferedStrength(strengths []int8, s int8, debugOn bool) []int8 {
 
 	if debugOn {
-		log.Printf("DEBUG: Updating strength buffer on node, value to add %v\n", s)
+		log.Printf("DEBUG: Updating Signal Strength buffer on node, value to add %v\n", s)
+		log.Printf("DEBUG: Signal Strength buffer before change: %v\n", s)
 	}
 
 	// Pop and shift the slice - pop currently disappears - then add the new value to the end
-
-	log.Printf("DEBUG: Strengths Pre: %v", strengths)
 	_, strengths = strengths[0], strengths[1:]
-	log.Printf("DEBUG: Strengths Post Pop: %v", strengths)
 	strengths = append(strengths, s)
-	log.Printf("DEBUG: Strengths Post Append: %v", strengths)
+
+	if debugOn {
+		log.Printf("DEBUG: Signal Strength buffer after change: %v\n", s)
+	}
 
 	return strengths
+
+}
+
+// Stength and Seen need to be fixed length to avoid infinite growth
+func updateBufferedTimes(times []string, t string, debugOn bool) []string {
+
+	if debugOn {
+		log.Printf("DEBUG: Updating Times Seen buffer on node, value to add %v\n", t)
+		log.Printf("DEBUG: Times Seen buffer before change: %v\n", t)
+	}
+
+	// Pop and shift the slice - pop currently disappears - then add the new value to the end
+	_, times = times[0], times[1:]
+	times = append(times, t)
+
+	if debugOn {
+		log.Printf("DEBUG: Times Seen buffer after change: %v\n", t)
+	}
+
+	return times
 
 }
