@@ -18,6 +18,7 @@ type Node struct {
 	timesSeen            int
 	strength             []int8
 	seen                 []string
+	firstSeen            string
 }
 
 type NodeList struct {
@@ -147,6 +148,7 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 	n.timesSeen = 1                                                            // Default is 1, this may increase if it already exists in Node List
 	n.strength = updateBufferedStrength(n.strength, beacon.sigStrength, false) // Turn off debug since overly noisy
 	n.seen = updateBufferedTimes(n.seen, beacon.timestamp, false)              // Turn off debg since overly noisy
+	n.firstSeen = beacon.timestamp
 
 	return n
 
