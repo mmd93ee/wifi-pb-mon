@@ -45,9 +45,9 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 	// See if the 'knownAs' value exists in the list of all known nodes
 	val, ok := graph.nodes[newNode.knownAs]
 	if ok {
-		// Found a matching knownAs in the Node List, update values
+		// Found a matching knownAs in the Node List, update values (turn off Debug to stop noise.)
 		val.timesSeen++
-		val.strength = updateBufferedStrength(val.strength, inNode.sigStrength, debugOn)
+		val.strength = updateBufferedStrength(val.strength, inNode.sigStrength, false)
 		val.seen = append(val.seen, inNode.timestamp)
 
 		if debugOn {
