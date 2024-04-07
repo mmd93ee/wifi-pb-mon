@@ -45,10 +45,10 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 	// See if the 'knownAs' value exists in the list of all known nodes
 	val, ok := graph.nodes[newNode.knownAs]
 	if ok {
-		// Found a matching knownAs in the Node List, update values (turn off Debug to stop noise.)
+		// Found a matching knownAs in the Node List, update values.
 		val.timesSeen++
-		val.strength = updateBufferedStrength(val.strength, inNode.sigStrength, false)
-		val.seen = updateBufferedTimes(val.seen, inNode.timestamp, false)
+		val.strength = updateBufferedStrength(val.strength, inNode.sigStrength, debugOn)
+		val.seen = updateBufferedTimes(val.seen, inNode.timestamp, debugOn)
 
 		if debugOn {
 			log.Printf("DEBUG: Updating node %v, seen %v times on %v transmitting addresses with strength (last 5) %v\n",
@@ -145,9 +145,9 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 	n.bssid = append(n.bssid, beacon.bssid)
 	n.nodeType = beacon.ptype
 	n.transmitterAddresses = append(n.transmitterAddresses, beacon.transmitter)
-	n.timesSeen = 1 // Default is 1, this may increase if it already exists in Node List
-	n.strength = updateBufferedStrength(n.strength, beacon.sigStrength, debugOn)
-	n.seen = updateBufferedTimes(n.seen, beacon.timestamp, debugOn)
+	n.timesSeen = 1                                                            // Default is 1, this may increase if it already exists in Node List
+	n.strength = updateBufferedStrength(n.strength, beacon.sigStrength, false) // Turn off debug since overly noisy
+	n.seen = updateBufferedTimes(n.seen, beacon.timestamp, false)              // Turn off debg since overly noisy
 
 	return n
 
