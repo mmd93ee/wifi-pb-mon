@@ -147,3 +147,12 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 	return n
 
 }
+
+// Stength and Seen need to be fixed length to avoid infinite growth
+func updateBufferedStrength(strengths []int8, s int8, debugOn bool) {
+
+	if debugOn {
+		log.Printf("DEBUG: Updating strength buffer on node, value to add %v\n", s)
+	}
+
+}
