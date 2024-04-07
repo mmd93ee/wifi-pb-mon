@@ -51,11 +51,10 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		val.seen = updateBufferedTimes(val.seen, inNode.timestamp, debugOn)
 
 		if debugOn {
-			log.Printf("DEBUG: Updating node %v, seen %v times on %v transmitting addresses with strength (last 5) %v\n",
+			log.Printf("DEBUG: Updating node %v, seen %v times on %v transmitting addresses\n",
 				inNode.ssid,
 				val.timesSeen,
-				len(val.transmitterAddresses),
-				val.strength[:5])
+				len(val.transmitterAddresses))
 		}
 
 	} else { // Not an existing 'knownAs' so we need a new node
