@@ -86,9 +86,19 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 			valAssoc = graph.nodes[assocNode.knownAs]
 		}
 
-		// Add probe packet knownAs to the SSID knownAs and vice versa
-		val.associations = append(val.associations, valAssoc)
-		valAssoc.associations = append(valAssoc.associations, val)
+		// Add unique probe packet knownAs to the SSID knownAs and vice versa
+
+		// Check if valAssoc is in val.associations and if not then add it
+		if !containsAssociation(val, valAssoc) {
+			log.Println("*******************Matched Assoc 1")
+			val.associations = append(val.associations, valAssoc)
+		}
+
+		// Check if val is in valAssoc.associations and if it is not then add it
+		if !containsAssociation(valAssoc, val) {
+			log.Println("*******************Matched Assoc 2")
+			valAssoc.associations = append(valAssoc.associations, val)
+		}
 
 		// Remove SSID from the probe target - bit of a hack...
 		val.ssid = ""
@@ -166,10 +176,6 @@ func updateBufferedStrength(strengths []int8, s int8, debugOn bool) []int8 {
 	_, strengths = strengths[0], strengths[1:]
 	strengths = append(strengths, s)
 
-	if debugOn {
-		//log.Printf("DEBUG: Signal Strength buffer after change: %v\n", strengths)
-	}
-
 	return strengths
 
 }
@@ -186,10 +192,16 @@ func updateBufferedTimes(times []string, t string, debugOn bool) []string {
 	_, times = times[0], times[1:]
 	times = append(times, t)
 
-	if debugOn {
-		//log.Printf("DEBUG: Times Seen buffer after change: %v\n", times)
-	}
-
 	return times
 
+}
+
+// Check if 'b' Node is in 'a' Node.associations.
+func containsAssociation(a *Node, b *Node) bool {
+	for _, v := range a.associations {
+		if v == b {
+			return true
+		}
+	}
+	return false
 }
