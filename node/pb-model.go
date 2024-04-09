@@ -169,12 +169,16 @@ func updateBufferedStrength(strengths []int8, s int8, debugOn bool) []int8 {
 
 	if debugOn {
 		log.Printf("DEBUG: Updating Signal Strength buffer on node, value to add %v\n", s)
-		//log.Printf("DEBUG: Signal Strength buffer before change: %v\n", strengths)
+		log.Printf("DEBUG: Signal Strength buffer before change: %v\n", strengths)
 	}
 
 	// Pop and shift the slice - pop currently disappears - then add the new value to the end
 	_, strengths = strengths[0], strengths[1:]
 	strengths = append(strengths, s)
+
+	if debugOn {
+		log.Printf("DEBUG: Signal Strength buffer after change: %v\n", strengths)
+	}
 
 	return strengths
 
