@@ -197,5 +197,5 @@ func PrintNodeDetail(data *Node) {
 		data.timesSeen,
 		data.strength,
 		data.seen,
-		data.associations)
+		assocString)
 }
