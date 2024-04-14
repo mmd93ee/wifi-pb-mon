@@ -174,6 +174,19 @@ func PrintBeaconDetail(t string, data *BeaconNode) {
 
 func PrintNodeDetail(data *Node) {
 
+	assocString := ""
+
+	for _, a := range data.associations {
+		bssids := "bssids: "
+
+		for _, b := range a.bssid {
+			bssids = bssids + b + " "
+		}
+
+		bssids = bssids + ")"
+		assocString = assocString + bssids + " (ssid: " + a.ssid + " )"
+	}
+
 	log.Printf("DEBUG: NODE:\n Known As: %s\n First Seen: %s\n SSID: %s\n BSSID: %s\n Node Type: %v\n Transmitter Addresses: %v\n Times Seen: %v\n Strengths: %v\n Seen: %s\n Associations: %v\n\n",
 		data.knownAs,
 		data.firstSeen,
@@ -185,5 +198,4 @@ func PrintNodeDetail(data *Node) {
 		data.strength,
 		data.seen,
 		data.associations)
-
 }
