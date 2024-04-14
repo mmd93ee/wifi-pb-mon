@@ -179,11 +179,11 @@ func PrintNodeDetail(data *Node) {
 	for _, a := range data.associations {
 		addresses := "Addresses: "
 
-		for _, b := range a.bssid {
+		for _, b := range a.transmitterAddresses {
 			addresses = addresses + b + " "
 		}
 
-		assocString = assocString + addresses + " (ssid: " + a.ssid + ")"
+		assocString = assocString + addresses + " (ssid: " + a.ssid + ") "
 	}
 
 	log.Printf("DEBUG: NODE:\n Known As: %s\n First Seen: %s\n SSID: %s\n BSSID: %s\n Node Type: %v\n Transmitter Addresses: %v\n Times Seen: %v\n Strengths: %v\n Seen: %s\n Associations: %v\n\n",
