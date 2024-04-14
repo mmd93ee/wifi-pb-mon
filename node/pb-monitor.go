@@ -183,7 +183,7 @@ func PrintNodeDetail(data *Node) {
 			addresses = addresses + b + " "
 		}
 
-		assocString = assocString + addresses + " (ssid: " + a.ssid + ") "
+		assocString = assocString + addresses + " (Known As: " + a.knownAs + ") "
 	}
 
 	log.Printf("DEBUG: NODE:\n Known As: %s\n First Seen: %s\n SSID: %s\n BSSID: %s\n Node Type: %v\n Transmitter Addresses: %v\n Times Seen: %v\n Strengths: %v\n Seen: %s\n Associations: %v\n\n",
