@@ -173,8 +173,12 @@ func updateBufferedStrength(strengths []int8, s int8, debugOn bool) []int8 {
 	}
 
 	// Pop and shift the slice - pop currently disappears - then add the new value to the end
-	_, strengths = strengths[0], strengths[1:]
-	strengths = append(strengths, s)
+	if len(strengths) > 0 {
+		_, strengths = strengths[0], strengths[1:]
+		strengths = append(strengths, s)
+	} else {
+		strengths = append(strengths, s)
+	}
 
 	if debugOn {
 		log.Printf("DEBUG: Signal Strength buffer after change: %v\n", strengths)
@@ -193,8 +197,12 @@ func updateBufferedTimes(times []string, t string, debugOn bool) []string {
 	}
 
 	// Pop and shift the slice - pop currently disappears - then add the new value to the end
-	_, times = times[0], times[1:]
-	times = append(times, t)
+	if len(times) > 0 {
+		_, times = times[0], times[1:]
+		times = append(times, t)
+	} else {
+		times = append(times, t)
+	}
 
 	return times
 
