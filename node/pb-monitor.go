@@ -175,9 +175,9 @@ func PrintBeaconDetail(t string, data *BeaconNode) {
 func PrintNodeDetail(data *Node) {
 
 	assocString := ""
+	addresses := "Addresses: "
 
 	for _, a := range data.associations {
-		addresses := "Addresses: "
 
 		for _, b := range a.transmitterAddresses {
 			addresses = addresses + b + " "
