@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -144,17 +145,21 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 
 	case "MgmtBeacon":
 
+		stringOut, _ := hex.DecodeString(beacon.ssid)
+
 		fmt.Println("DEBUG: ", len(strings.TrimLeft(beacon.ssid, " ")))
+		fmt.Println("DEBUG2: ", stringOut)
 
 		for i := 0; i < len(beacon.ssid); i++ {
 			fmt.Printf("********* Char: % +q **** ", beacon.ssid[i])
+			
 		}
 
 		if debugOn {
 			log.Printf("DEBUG: Beacon request (%v), setting KnownAs to ssid %v or transmitter %v (%T)\n", beacon.ptype, beacon.ssid, beacon.transmitter, beacon.ssid)
 		}
 
-		if len(strings.TrimLeft(beacon.ssid, " ")) > 0 {
+		if len(strings.TrimLeft(beacon.ssid, "\0")) > 0 {
 			n.KnownAs = beacon.ssid
 
 		} else {
