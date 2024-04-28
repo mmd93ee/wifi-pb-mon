@@ -236,6 +236,6 @@ func writeToDatabase(node *Node, dbName string, debugOn bool) bool {
 		panic(err)
 	}
 
-	fmt.Printf("**************** JSON Data: %v \n", jsonOut)
+	fmt.Printf("**************** JSON Data: %v \n", string(jsonOut))
 	return true
 }
