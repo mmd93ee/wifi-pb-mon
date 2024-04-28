@@ -230,7 +230,7 @@ func writeToDatabase(node *Node, dbName string, debugOn bool) bool {
 		log.Printf("DEBUG: Writing %v out to database folder %v", node.knownAs, dbName)
 	}
 
-	jsonOut, err := json.Marshal(node)
+	jsonOut, err := json.Marshal(*node)
 
 	if err != nil {
 		panic(err)
