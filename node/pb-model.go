@@ -116,7 +116,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 	}
 
 	// Write out to the database folder
-	writeToDatabase(val)
+	writeToDatabase(val, dbName, debugOn)
 
 	return true
 }
@@ -224,7 +224,11 @@ func containsAssociation(a *Node, b *Node) bool {
 }
 
 // Marshall out to json and write to the database folder
-func writeToDatabase(node *Node) bool {
+func writeToDatabase(node *Node, dbName string, debugOn bool) bool {
+
+	if debugOn {
+		log.Printf("DEBUG: Writing %v out to database folder %v", node.knownAs, dbName)
+	}
 
 	jsonOut, err := json.Marshal(node)
 
@@ -232,6 +236,6 @@ func writeToDatabase(node *Node) bool {
 		panic(err)
 	}
 
-	fmt.Printf("JSON Data: %v", jsonOut)
+	fmt.Printf("**************** JSON Data: %v \n", jsonOut)
 	return true
 }
