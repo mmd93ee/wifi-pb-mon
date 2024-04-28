@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 )
 
@@ -104,6 +106,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		val.ssid = ""
 
 		// Write out to the database folder
+		writeToDatabase(val)
 
 		if debugOn {
 			log.Printf("DEBUG: Added %v to node %v and vice versa\n", valAssoc.knownAs, val.knownAs)
@@ -218,4 +221,17 @@ func containsAssociation(a *Node, b *Node) bool {
 		}
 	}
 	return false
+}
+
+// Marshall out to json and write to the database folder
+func writeToDatabase(node *Node) bool {
+
+	jsonOut, err := json.Marshal(node)
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("JSON Data: %v", jsonOut)
+	return true
 }
