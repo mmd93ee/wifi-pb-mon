@@ -243,7 +243,7 @@ func writeToDatabase(node *Node, dbName string, debugOn bool) bool {
 	}
 
 	// Write string to the file at path 'dbName / KnownAs'
-	fileOutPath := dbName + node.KnownAs
+	fileOutPath := dbName + "\\" + node.KnownAs
 	fileErr := os.WriteFile(fileOutPath, jsonOut, os.ModePerm)
 
 	if fileErr != nil {
