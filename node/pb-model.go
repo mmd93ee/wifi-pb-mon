@@ -146,7 +146,11 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 			log.Printf("DEBUG: Beacon request (%v), setting KnownAs to %v\n", beacon.ptype, beacon.ssid)
 		}
 
-		n.KnownAs = beacon.ssid
+		if beacon.ssid != "" {
+			n.KnownAs = beacon.ssid
+		} else {
+			n.KnownAs = beacon.transmitter
+		}
 
 	default:
 
