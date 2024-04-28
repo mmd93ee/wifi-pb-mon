@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -143,6 +144,7 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 
 	case "MgmtBeacon":
 
+		fmt.Println("DEBUG: ", len(strings.TrimSpace(beacon.ssid)))
 		if debugOn {
 			log.Printf("DEBUG: Beacon request (%v), setting KnownAs to ssid %v or transmitter %v (%T)\n", beacon.ptype, beacon.ssid, beacon.transmitter, beacon.ssid)
 		}
