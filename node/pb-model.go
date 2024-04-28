@@ -1,12 +1,11 @@
 package main
 
 import (
-	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -96,13 +95,11 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 
 		// Check if valAssoc is in val.associations and if not then add it
 		if !containsAssociation(val, valAssoc) {
-			log.Println("*******************Matched Assoc 1")
 			val.Associations = append(val.Associations, valAssoc.KnownAs)
 		}
 
 		// Check if val is in valAssoc.associations and if it is not then add it
 		if !containsAssociation(valAssoc, val) {
-			log.Println("*******************Matched Assoc 2")
 			valAssoc.Associations = append(valAssoc.Associations, val.KnownAs)
 		}
 
@@ -145,26 +142,15 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 
 	case "MgmtBeacon":
 
-		stringOut, _ := hex.DecodeString(beacon.ssid)
-
-		fmt.Println("DEBUG: ", len(strings.TrimLeft(beacon.ssid, " ")))
-		fmt.Printf("DEBUG2: %v length %v", stringOut, len(stringOut))
-
-		for i := 0; i < len(beacon.ssid); i++ {
-			fmt.Printf("********* Char: % +q **** ", beacon.ssid[i])
-
-		}
-
 		if debugOn {
-			log.Printf("DEBUG: Beacon request (%v), setting KnownAs to ssid %v or transmitter %v (%T)\n", beacon.ptype, beacon.ssid, beacon.transmitter, beacon.ssid)
+			log.Printf("DEBUG: Beacon request (%v), setting KnownAs to ssid %v or if blank to 'unknown (length)'\n", beacon.ptype, beacon.ssid)
 		}
 
 		if len(strings.TrimLeft(beacon.ssid, "\x00")) > 0 {
-			fmt.Println("NORMAL")
 			n.KnownAs = beacon.ssid
 
 		} else {
-			n.KnownAs = beacon.transmitter + "(GENERATED)"
+			n.KnownAs = "hidden (len:" + strconv.Itoa(len(beacon.ssid)) + ")"
 		}
 
 	default:
