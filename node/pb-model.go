@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 )
 
 // A node represents an AP, device or other transmitting/recieving address including broadcast
@@ -230,10 +231,19 @@ func writeToDatabase(node *Node, dbName string, debugOn bool) bool {
 		log.Printf("DEBUG: Writing %v out to database folder %v", node.KnownAs, dbName)
 	}
 
-	jsonOut, err := json.Marshal(*node)
+	// Create json string
+	jsonOut, jsonErr := json.Marshal(*node)
 
-	if err != nil {
-		panic(err)
+	if jsonErr != nil {
+		panic(jsonErr)
+	}
+
+	// Write string to the file at path 'dbName / KnownAs'
+	fileOutPath := dbName + node.KnownAs
+	fileErr := os.WriteFile(fileOutPath, jsonOut, os.ModePerm)
+
+	if fileErr != nil {
+		panic(fileErr)
 	}
 
 	fmt.Printf("**************** JSON Data: %v \n", string(jsonOut))
