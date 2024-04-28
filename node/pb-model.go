@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 )
 
 // A node represents an AP, device or other transmitting/recieving address including broadcast
@@ -242,8 +243,15 @@ func writeToDatabase(node *Node, dbName string, debugOn bool) bool {
 		panic(jsonErr)
 	}
 
+	// Create database subfolder
+	dirErr := os.MkdirAll(dbName, 0666)
+
+	if dirErr != nil {
+		panic(dirErr)
+	}
+
 	// Write string to the file at path 'dbName / KnownAs'
-	fileOutPath := dbName + "/" + node.KnownAs
+	fileOutPath := dbName + string(filepath.Separator) + node.KnownAs
 	fileErr := os.WriteFile(fileOutPath, jsonOut, os.ModePerm)
 
 	if fileErr != nil {
