@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"github.com/google/gopacket/pcap"
@@ -32,6 +33,7 @@ var (
 	rDetect    bool
 	filterTran string
 	debugOn    bool
+	dbName     string
 
 	// Counters
 	ProbeCount  int
@@ -50,6 +52,7 @@ func main() {
 	flag.BoolVar(&rDetect, "r", false, "Counter MAC Randomisation On")
 	flag.StringVar(&filterTran, "f", "all", "Transmitter MAC Filter (not implemented yet)")
 	flag.BoolVar(&debugOn, "d", false, "Debug On")
+	flag.StringVar(&dbName, "db", strconv.FormatInt(time.Now().Unix(), 10), "Name of the folder in the database, default unixtime")
 	flag.Parse()
 
 	// Print out command line arguments
@@ -58,6 +61,7 @@ func main() {
 	fmt.Println("  Packet Buffer Size (-b) : ", pBuffer)
 	fmt.Println("  Detect and Counter Random MAC (-r): ", rDetect)
 	fmt.Println("  Transmitter MAC Filter (not yet available) (-f): ", filterTran)
+	fmt.Println("  Database Folder (-db): ", dbName)
 	fmt.Println("  Debug (-d): ", debugOn)
 
 	// Initialiase Counters

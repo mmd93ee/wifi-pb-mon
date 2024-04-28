@@ -103,6 +103,8 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		// Remove SSID from the probe target - bit of a hack...
 		val.ssid = ""
 
+		// Write out to the database folder
+
 		if debugOn {
 			log.Printf("DEBUG: Added %v to node %v and vice versa\n", valAssoc.knownAs, val.knownAs)
 			log.Println("FROM NODE: ")
@@ -116,7 +118,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 	return true
 }
 
-// Create a Node from a BeaconNode
+// Create a Node from a BeaconNode to then be used to manipulate data into.
 func createNodeFromBeacon(beacon *BeaconNode) Node {
 
 	n := Node{}
