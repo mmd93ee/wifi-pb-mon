@@ -147,7 +147,7 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 		fmt.Println("DEBUG: ", len(strings.TrimLeft(beacon.ssid, " ")))
 
 		for i := 0; i < len(beacon.ssid); i++ {
-			fmt.Printf("********* Char: % q **** ", beacon.ssid[i])
+			fmt.Printf("********* Char: % +q **** ", beacon.ssid[i])
 		}
 
 		if debugOn {
