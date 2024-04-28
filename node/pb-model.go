@@ -152,14 +152,14 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 
 		for i := 0; i < len(beacon.ssid); i++ {
 			fmt.Printf("********* Char: % +q **** ", beacon.ssid[i])
-			
+
 		}
 
 		if debugOn {
 			log.Printf("DEBUG: Beacon request (%v), setting KnownAs to ssid %v or transmitter %v (%T)\n", beacon.ptype, beacon.ssid, beacon.transmitter, beacon.ssid)
 		}
 
-		if len(strings.TrimLeft(beacon.ssid, "\0")) > 0 {
+		if len(strings.TrimLeft(beacon.ssid, "[0x00]")) > 0 {
 			n.KnownAs = beacon.ssid
 
 		} else {
