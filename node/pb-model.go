@@ -9,7 +9,7 @@ import (
 // A node represents an AP, device or other transmitting/recieving address including broadcast
 type Node struct {
 	// Adjacency information
-	Associations []*Node
+	Associations []string
 
 	// Node data
 	KnownAs              string
@@ -93,13 +93,13 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		// Check if valAssoc is in val.associations and if not then add it
 		if !containsAssociation(val, valAssoc) {
 			log.Println("*******************Matched Assoc 1")
-			val.Associations = append(val.Associations, valAssoc)
+			val.Associations = append(val.Associations, valAssoc.KnownAs)
 		}
 
 		// Check if val is in valAssoc.associations and if it is not then add it
 		if !containsAssociation(valAssoc, val) {
 			log.Println("*******************Matched Assoc 2")
-			valAssoc.Associations = append(valAssoc.Associations, val)
+			valAssoc.Associations = append(valAssoc.Associations, val.KnownAs)
 		}
 
 		// Remove SSID from the probe target - bit of a hack...
@@ -216,7 +216,7 @@ func updateBufferedTimes(times []string, t string, debugOn bool) []string {
 // Check if 'b' Node is in 'a' Node.associations.
 func containsAssociation(a *Node, b *Node) bool {
 	for _, v := range a.Associations {
-		if v == b {
+		if v == b.KnownAs {
 			return true
 		}
 	}
