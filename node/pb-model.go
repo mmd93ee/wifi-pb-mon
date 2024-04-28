@@ -145,6 +145,11 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 	case "MgmtBeacon":
 
 		fmt.Println("DEBUG: ", len(strings.TrimLeft(beacon.ssid, " ")))
+
+		for i := 0; i < len(beacon.ssid); i++ {
+			fmt.Printf("********* Char: %x", beacon.ssid[i])
+		}
+
 		if debugOn {
 			log.Printf("DEBUG: Beacon request (%v), setting KnownAs to ssid %v or transmitter %v (%T)\n", beacon.ptype, beacon.ssid, beacon.transmitter, beacon.ssid)
 		}
