@@ -146,10 +146,10 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 			log.Printf("DEBUG: Beacon request (%v), setting KnownAs to %v\n", beacon.ptype, beacon.ssid)
 		}
 
-		if beacon.ssid != "" {
+		if beacon.ssid != " " {
 			n.KnownAs = beacon.ssid
 		} else {
-			n.KnownAs = beacon.transmitter
+			n.KnownAs = beacon.transmitter + "(GENERATED)"
 		}
 
 	default:
@@ -243,7 +243,7 @@ func writeToDatabase(node *Node, dbName string, debugOn bool) bool {
 	}
 
 	// Write string to the file at path 'dbName / KnownAs'
-	fileOutPath := dbName + "\\" + node.KnownAs
+	fileOutPath := dbName + "/" + node.KnownAs
 	fileErr := os.WriteFile(fileOutPath, jsonOut, os.ModePerm)
 
 	if fileErr != nil {

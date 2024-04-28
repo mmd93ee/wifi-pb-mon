@@ -106,14 +106,14 @@ func decodeProbeRequestLayer(probeLayer *layers.Dot11MgmtProbeReq) (ssid string,
 				ssid = string(body[i : i+elemLen])
 				i += elemLen
 			}
-			//break
+
 		case layers.Dot11InformationElementIDVendor:
 			vendor = body[i+1:]
 			return
 		default:
 			elemLen := uint64(body[i])
 			i += 1 + elemLen
-			//break
+
 		}
 	}
 
