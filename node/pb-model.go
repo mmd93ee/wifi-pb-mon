@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // A node represents an AP, device or other transmitting/recieving address including broadcast
@@ -147,8 +147,9 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 			log.Printf("DEBUG: Beacon request (%v), setting KnownAs to %v\n", beacon.ptype, beacon.ssid)
 		}
 
-		if beacon.ssid != " " {
+		if strings.TrimSpace(beacon.ssid) != "" {
 			n.KnownAs = beacon.ssid
+
 		} else {
 			n.KnownAs = beacon.transmitter + "(GENERATED)"
 		}
@@ -258,6 +259,5 @@ func writeToDatabase(node *Node, dbName string, debugOn bool) bool {
 		panic(fileErr)
 	}
 
-	fmt.Printf("**************** JSON Data: %v \n", string(jsonOut))
 	return true
 }
