@@ -180,11 +180,11 @@ func PrintNodeDetail(data *Node) {
 
 	assocString := ""
 
-	for _, a := range data.associations {
+	for _, a := range data.Associations {
 
 		addresses := "Node Addresses: "
 
-		for _, b := range a.transmitterAddresses {
+		for _, b := range a.TransmitterAddresses {
 			addresses = addresses + b + " "
 		}
 
@@ -193,13 +193,13 @@ func PrintNodeDetail(data *Node) {
 
 	log.Printf("DEBUG: NODE:\n Known As: %s\n First Seen: %s\n SSID: %s\n BSSID: %s\n Node Type: %v\n Transmitter Addresses: %v\n Times Seen: %v\n Strengths: %v\n Seen: %s\n Associations: %v\n\n",
 		data.KnownAs,
-		data.firstSeen,
-		data.ssid,
-		data.bssid,
-		data.nodeType,
-		data.transmitterAddresses,
-		data.timesSeen,
-		data.strength,
-		data.seen,
+		data.FirstSeen,
+		data.SSID,
+		data.BSSID,
+		data.NodeType,
+		data.TransmitterAddresses,
+		data.TimesSeen,
+		data.Strength,
+		data.Seen,
 		assocString)
 }

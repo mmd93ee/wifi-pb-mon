@@ -9,18 +9,18 @@ import (
 // A node represents an AP, device or other transmitting/recieving address including broadcast
 type Node struct {
 	// Adjacency information
-	associations []*Node
+	Associations []*Node
 
 	// Node data
 	KnownAs              string
-	ssid                 string
-	bssid                []string
-	nodeType             string
-	transmitterAddresses []string
-	timesSeen            int
-	strength             []int8
-	seen                 []string
-	firstSeen            string
+	SSID                 string
+	BSSID                []string
+	NodeType             string
+	TransmitterAddresses []string
+	TimesSeen            int
+	Strength             []int8
+	Seen                 []string
+	FirstSeen            string
 }
 
 type NodeList struct {
@@ -49,15 +49,15 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 	val, ok := graph.nodes[newNode.KnownAs]
 	if ok {
 		// Found a matching KnownAs in the Node List, update values.
-		val.timesSeen++
-		val.strength = updateBufferedStrength(val.strength, inNode.sigStrength, debugOn)
-		val.seen = updateBufferedTimes(val.seen, inNode.timestamp, debugOn)
+		val.TimesSeen++
+		val.Strength = updateBufferedStrength(val.Strength, inNode.sigStrength, debugOn)
+		val.Seen = updateBufferedTimes(val.Seen, inNode.timestamp, debugOn)
 
 		if debugOn {
 			log.Printf("DEBUG: Updating node %v, seen %v times on %v transmitting addresses\n",
 				inNode.ssid,
-				val.timesSeen,
-				len(val.transmitterAddresses))
+				val.TimesSeen,
+				len(val.TransmitterAddresses))
 		}
 
 	} else { // Not an existing 'KnownAs' so we need a new node
@@ -69,20 +69,20 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		}
 	}
 
-	if val.nodeType == "MgmtProbeReq" { // Probe request, update the associations and make sure both ends of the probe exist
+	if val.NodeType == "MgmtProbeReq" { // Probe request, update the associations and make sure both ends of the probe exist
 
 		if debugOn {
 			log.Printf("DEBUG: Adding associations from probe request\n")
 		}
 
-		valAssoc, ok := graph.nodes[newNode.ssid] // Check if we have the node that is being probed
+		valAssoc, ok := graph.nodes[newNode.SSID] // Check if we have the node that is being probed
 
 		if !ok { // Create a skeleton endpoint for the probe and add to the Graph List.
 
 			if debugOn {
-				log.Printf("DEBUG: Probe request to an undiscovered SSID: %v so adding as new node\n", newNode.ssid)
+				log.Printf("DEBUG: Probe request to an undiscovered SSID: %v so adding as new node\n", newNode.SSID)
 			}
-			assocNode := Node{KnownAs: newNode.ssid}
+			assocNode := Node{KnownAs: newNode.SSID}
 			graph.nodes[assocNode.KnownAs] = &assocNode
 
 			valAssoc = graph.nodes[assocNode.KnownAs]
@@ -93,17 +93,17 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		// Check if valAssoc is in val.associations and if not then add it
 		if !containsAssociation(val, valAssoc) {
 			log.Println("*******************Matched Assoc 1")
-			val.associations = append(val.associations, valAssoc)
+			val.Associations = append(val.Associations, valAssoc)
 		}
 
 		// Check if val is in valAssoc.associations and if it is not then add it
 		if !containsAssociation(valAssoc, val) {
 			log.Println("*******************Matched Assoc 2")
-			valAssoc.associations = append(valAssoc.associations, val)
+			valAssoc.Associations = append(valAssoc.Associations, val)
 		}
 
 		// Remove SSID from the probe target - bit of a hack...
-		val.ssid = ""
+		val.SSID = ""
 
 		if debugOn {
 			log.Printf("DEBUG: Added %v to node %v and vice versa\n", valAssoc.KnownAs, val.KnownAs)
@@ -125,8 +125,8 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 func createNodeFromBeacon(beacon *BeaconNode) Node {
 
 	n := Node{}
-	n.strength = make([]int8, pBuffer)
-	n.seen = make([]string, pBuffer)
+	n.Strength = make([]int8, pBuffer)
+	n.Seen = make([]string, pBuffer)
 
 	// Data settings based on BeaconProbe type
 	switch beacon.ptype {
@@ -156,14 +156,14 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 		n.KnownAs = beacon.ssid
 	}
 
-	n.ssid = beacon.ssid
-	n.bssid = append(n.bssid, beacon.bssid)
-	n.nodeType = beacon.ptype
-	n.transmitterAddresses = append(n.transmitterAddresses, beacon.transmitter)
-	n.timesSeen = 1                                                            // Default is 1, this may increase if it already exists in Node List
-	n.strength = updateBufferedStrength(n.strength, beacon.sigStrength, false) // Turn off debug since overly noisy
-	n.seen = updateBufferedTimes(n.seen, beacon.timestamp, false)              // Turn off debg since overly noisy
-	n.firstSeen = beacon.timestamp
+	n.SSID = beacon.ssid
+	n.BSSID = append(n.BSSID, beacon.bssid)
+	n.NodeType = beacon.ptype
+	n.TransmitterAddresses = append(n.TransmitterAddresses, beacon.transmitter)
+	n.TimesSeen = 1                                                            // Default is 1, this may increase if it already exists in Node List
+	n.Strength = updateBufferedStrength(n.Strength, beacon.sigStrength, false) // Turn off debug since overly noisy
+	n.Seen = updateBufferedTimes(n.Seen, beacon.timestamp, false)              // Turn off debg since overly noisy
+	n.FirstSeen = beacon.timestamp
 
 	return n
 
@@ -215,7 +215,7 @@ func updateBufferedTimes(times []string, t string, debugOn bool) []string {
 
 // Check if 'b' Node is in 'a' Node.associations.
 func containsAssociation(a *Node, b *Node) bool {
-	for _, v := range a.associations {
+	for _, v := range a.Associations {
 		if v == b {
 			return true
 		}
