@@ -12,7 +12,7 @@ type Node struct {
 	associations []*Node
 
 	// Node data
-	knownAs              string
+	KnownAs              string
 	ssid                 string
 	bssid                []string
 	nodeType             string
@@ -45,10 +45,10 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 	// In all cases create a new node as a base to work against
 	newNode := createNodeFromBeacon(inNode)
 
-	// See if the 'knownAs' value exists in the list of all known nodes
-	val, ok := graph.nodes[newNode.knownAs]
+	// See if the 'KnownAs' value exists in the list of all known nodes
+	val, ok := graph.nodes[newNode.KnownAs]
 	if ok {
-		// Found a matching knownAs in the Node List, update values.
+		// Found a matching KnownAs in the Node List, update values.
 		val.timesSeen++
 		val.strength = updateBufferedStrength(val.strength, inNode.sigStrength, debugOn)
 		val.seen = updateBufferedTimes(val.seen, inNode.timestamp, debugOn)
@@ -60,12 +60,12 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 				len(val.transmitterAddresses))
 		}
 
-	} else { // Not an existing 'knownAs' so we need a new node
-		graph.nodes[newNode.knownAs] = &newNode
-		val = graph.nodes[newNode.knownAs] // Set val to the newly created Node
+	} else { // Not an existing 'KnownAs' so we need a new node
+		graph.nodes[newNode.KnownAs] = &newNode
+		val = graph.nodes[newNode.KnownAs] // Set val to the newly created Node
 
 		if debugOn {
-			log.Printf("DEBUG: New node %v added to Graph List\n", val.knownAs)
+			log.Printf("DEBUG: New node %v added to Graph List\n", val.KnownAs)
 		}
 	}
 
@@ -82,13 +82,13 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 			if debugOn {
 				log.Printf("DEBUG: Probe request to an undiscovered SSID: %v so adding as new node\n", newNode.ssid)
 			}
-			assocNode := Node{knownAs: newNode.ssid}
-			graph.nodes[assocNode.knownAs] = &assocNode
+			assocNode := Node{KnownAs: newNode.ssid}
+			graph.nodes[assocNode.KnownAs] = &assocNode
 
-			valAssoc = graph.nodes[assocNode.knownAs]
+			valAssoc = graph.nodes[assocNode.KnownAs]
 		}
 
-		// Add unique probe packet knownAs to the SSID knownAs and vice versa
+		// Add unique probe packet KnownAs to the SSID KnownAs and vice versa
 
 		// Check if valAssoc is in val.associations and if not then add it
 		if !containsAssociation(val, valAssoc) {
@@ -106,7 +106,7 @@ func addNodeFromBeacon(graph *NodeList, inNode *BeaconNode, debugOn bool) bool {
 		val.ssid = ""
 
 		if debugOn {
-			log.Printf("DEBUG: Added %v to node %v and vice versa\n", valAssoc.knownAs, val.knownAs)
+			log.Printf("DEBUG: Added %v to node %v and vice versa\n", valAssoc.KnownAs, val.KnownAs)
 			log.Println("FROM NODE: ")
 			PrintNodeDetail(val)
 			log.Println("TO NODE: ")
@@ -137,7 +137,7 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 			log.Printf("DEBUG: Probe request (%v), setting KnownAs to %v\n", beacon.ptype, beacon.transmitter)
 		}
 
-		n.knownAs = beacon.transmitter
+		n.KnownAs = beacon.transmitter
 
 	case "MgmtBeacon":
 
@@ -145,7 +145,7 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 			log.Printf("DEBUG: Beacon request (%v), setting KnownAs to %v\n", beacon.ptype, beacon.ssid)
 		}
 
-		n.knownAs = beacon.ssid
+		n.KnownAs = beacon.ssid
 
 	default:
 
@@ -153,7 +153,7 @@ func createNodeFromBeacon(beacon *BeaconNode) Node {
 			log.Printf("DEBUG: Default packet type applied to %v, setting KnownAs to %v\n", beacon.ptype, beacon.ssid)
 		}
 
-		n.knownAs = beacon.ssid
+		n.KnownAs = beacon.ssid
 	}
 
 	n.ssid = beacon.ssid
@@ -227,7 +227,7 @@ func containsAssociation(a *Node, b *Node) bool {
 func writeToDatabase(node *Node, dbName string, debugOn bool) bool {
 
 	if debugOn {
-		log.Printf("DEBUG: Writing %v out to database folder %v", node.knownAs, dbName)
+		log.Printf("DEBUG: Writing %v out to database folder %v", node.KnownAs, dbName)
 	}
 
 	jsonOut, err := json.Marshal(*node)
