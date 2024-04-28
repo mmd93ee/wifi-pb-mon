@@ -167,7 +167,7 @@ func PrintBeaconDetail(t string, data *BeaconNode) {
 		t,
 		data.timestamp,
 		data.bssid,
-		data.ssid,
+		data.ssid+" (len: "+strconv.Itoa(len(data.ssid))+")",
 		data.transmitter,
 		data.receiver,
 		data.pflag,
