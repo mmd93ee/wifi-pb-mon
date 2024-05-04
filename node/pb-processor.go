@@ -1,3 +1,5 @@
+// Packet processing and storage into Structs that allow for data management (model) or display (visualise).
+
 package main
 
 import (

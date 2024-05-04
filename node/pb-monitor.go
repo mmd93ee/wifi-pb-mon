@@ -1,3 +1,5 @@
+// Core functions that launch the application.
+
 package main
 
 import (

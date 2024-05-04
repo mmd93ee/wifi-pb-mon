@@ -1,3 +1,6 @@
+// Functions that support the data model, data processing and translation between
+// FIles, Structs and other IO activity.
+
 package main
 
 import (
